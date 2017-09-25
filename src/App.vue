@@ -1,17 +1,18 @@
 <template>
   <div id="app">
-    <Play />
+    <Play2 />
   </div>
 </template>
 
 <script>
 // import Hello from './components/Hello'
-import Play from './components/Play'
+// import Play from './components/Play'
+import Play2 from './components/Play2'
 
 export default {
   name: 'app',
   components: {
-    Play
+    Play2
   }
 }
 </script>
