@@ -51,38 +51,54 @@
       const columns = this.configs.columns  // 列配置
       const columnDefaultAttr = this.configs.columnDefault // 列默认配置
 
+      // const renderHeaderCommon = function(columnAttr) {
+      //   return function(createElement, { column, $index }) {
+      //     return createElement('div', {
+      //       class: 'table-header'
+      //     }, [
+      //       createElement('div', {
+      //         class: 'table-header-title'
+      //       }, [
+      //         createElement('span', column.label)
+      //       ].concat(
+      //         columnAttr.custom && columnAttr.custom.sortable
+      //          ? [
+      //            createElement('div', {
+      //              class: 'sort-caret-wrapper'
+      //            }, [
+      //              createElement('i', {
+      //                class: 'sort-cart ascending'
+      //              }),
+      //              createElement('i', {
+      //                class: 'sort-caret descending'
+      //              })
+      //            ])
+      //          ]
+      //          : []
+      //       )),
+      //       createElement('div', {
+      //         class: 'table-header-content'
+      //       },
+      //       columnAttr.custom && columnAttr.custom.headerContent
+      //         ? [columnAttr.custom.headerContent] : []
+      //       )
+      //     ])
+      //   }
+      // }
+
       const renderHeaderCommon = function(columnAttr) {
-        return function(createElement, { column, $index }) {
-          return createElement('div', {
-            class: 'table-header'
-          }, [
-            createElement('div', {
-              class: 'table-header-title'
-            }, [
-              createElement('span', column.label)
-            ].concat(
-              columnAttr.custom && columnAttr.custom.sortable
-               ? [
-                 createElement('div', {
-                   class: 'sort-caret-wrapper'
-                 }, [
-                   createElement('i', {
-                     class: 'sort-cart ascending'
-                   }),
-                   createElement('i', {
-                     class: 'sort-caret descending'
-                   })
-                 ])
-               ]
-               : []
-            )),
-            createElement('div', {
-              class: 'table-header-content'
-            },
-            columnAttr.custom && columnAttr.custom.headerContent
-              ? columnAttr.custom.headerContent(createElement) : []
-            )
-          ])
+        return function(h, {column, $index}) {
+          return (
+            <div class="table-header">
+              <div class="table-header-title">
+                <span>{column.label}</span>
+              </div>
+              <div class="table-header-content">
+                {columnAttr.custom && columnAttr.custom.renderHeaderContent &&
+                columnAttr.custom.renderHeaderContent(h)}
+              </div>
+            </div>
+          )
         }
       }
 

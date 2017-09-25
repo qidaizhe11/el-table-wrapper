@@ -10,12 +10,15 @@
 
 <script>
   import Vue from 'vue'
-  import { Table, TableColumn, Button } from 'element-ui'
+  // import { Table, TableColumn, Button, Input, Select, Option } from 'element-ui'
   import ElTableWrapper from './el-table-wrapper'
 
-  Vue.use(Table)
-  Vue.use(TableColumn)
-  Vue.use(Button)
+  // Vue.use(Table)
+  // Vue.use(TableColumn)
+  // Vue.use(Button)
+  // Vue.use(Input)
+  // Vue.use(Select)
+  // Vue.use(Option)
   Vue.use(ElTableWrapper)
 
   export default {
@@ -36,11 +39,17 @@
           {
             prop: 'ip',
             label: 'IP',
-            width: 200
+            width: 200,
+            custom: {
+              renderHeaderContent: this.renderIpHeaderContent
+            }
           },
           {
             prop: 'location.name',
-            label: '最新位置信息'
+            label: '最新位置信息',
+            custom: {
+              renderHeaderContent: this.renderLocationHeaderContent
+            }
           },
           {
             prop: 'latestTime',
@@ -86,7 +95,41 @@
             ip: '114.64.232.162'
           }
         ],
-        configs: tableConfigs
+        configs: tableConfigs,
+        ip: '10.20.30.40'
+      }
+    },
+    methods: {
+      onIpSearchClick() {
+        console.log('Play, onIpSearchCLick.')
+      },
+      renderIpHeaderContent(h) {
+        const that = this
+        return (
+          <el-input class="ip-header-content-input" {...{
+            props: {
+              icon: 'search',
+              value: that.ip,
+              onIconClick: that.onIpSearchClick
+            }
+          }}>
+          </el-input>
+        )
+      },
+      renderLocationHeaderContent(h) {
+        // const that = this
+        return (
+          <div class="location-header-content-container">
+            <el-select value="北京市">
+              <el-option label="北京市" value="北京市"></el-option>
+              <el-option label="四川省" value="四川省"></el-option>
+            </el-select>
+            <el-select value="xichengqu">
+              <el-option label="西城区" value="xichengqu"></el-option>
+              <el-option label="海淀区" value="haidianqu"></el-option>
+            </el-select>
+          </div>
+        )
       }
     }
   }

@@ -10,12 +10,12 @@
   ],
   "plugins": [
     "transform-runtime",
-    ["component", [
-      {
-        "libraryName": "element-ui",
-        "styleLibraryName": "theme-default"
-      }
-    ]],
+    // ["component", [
+    //   {
+    //     "libraryName": "element-ui",
+    //     "styleLibraryName": "theme-default"
+    //   }
+    // ]],
     "transform-vue-jsx"
   ],
   "env": {
