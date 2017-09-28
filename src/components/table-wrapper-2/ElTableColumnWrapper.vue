@@ -1,37 +1,42 @@
 
 <script>
+  const renderHeaderCommon = function(customRenderHeader) {
+    return function(h, { column, $index }) {
+      return (
+        <div class="table-header">
+          <div class="table-header-title">
+            <span>{column.label}</span>
+          </div>
+          <div class="table-header-content">
+            {
+              customRenderHeader && customRenderHeader(h)
+            }
+          </div>
+        </div>
+      )
+    }
+  }
+
   export default {
     name: 'ElTableColumnWrapper',
     functional: true,
     render(h, context) {
-      // const context = this
       console.log('ElTableColumnWrapper, render, context:', context)
 
-      const isCustomHeader = context.props.customRenderHeader
+      const customRenderHeader = context.props.customRenderHeader
 
-      const renderHeaderCommon = function(h, { column, $index }) {
-        return (
-          <div class="table-header">
-            <div class="table-header-title">
-              <span>{column.label}</span>
-            </div>
-            <div class="table-header-content">
-            {
-              isCustomHeader && isCustomHeader(h)
-            }
-            </div>
-          </div>
-        )
-      }
+      const props = { ...context.props }
+      props.renderHeader = renderHeaderCommon(customRenderHeader)
 
       return (
         <el-table-column {...{
-          props: {...context.props, renderHeader: renderHeaderCommon},
+          props: props,
           listeners: context.listeners
         }}>
-        {
-          context.props.customSlot ? context.data.scopedSlots[context.props.customSlot] : ''
-        }
+          {
+            context.data.scopedSlots && context.data.scopedSlots.default
+             ? context.data.scopedSlots.default : ''
+          }
         </el-table-column>
       )
     }

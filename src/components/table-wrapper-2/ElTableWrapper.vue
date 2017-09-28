@@ -1,21 +1,21 @@
 
 <template>
   <el-table class="ll-table" v-bind="$attrs" v-on="$listeners">
-    <!-- <slot>
-      <div slot="append">
-        <slot name="append"></slot>
-      </div>
-    </slot> -->
     <slot></slot>
   </el-table>
 </template>
 
 <script>
+  let tableIdSeed = 1
+
   export default {
     name: 'ElTableWrapper',
     data() {
       return {
       }
+    },
+    created() {
+      this.tabelId = 'll-table_' + tableIdSeed + '_'
     }
   }
 </script>

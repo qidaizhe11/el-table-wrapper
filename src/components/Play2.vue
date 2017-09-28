@@ -9,8 +9,8 @@
       </el-table-column-wrapper>
       <el-table-column-wrapper label="最新上报时间" prop="latestTime" width="200">
       </el-table-column-wrapper>
-      <el-table-column-wrapper label="操作" align="center" custom-slot="modify-slot">
-        <template scope="scope" slot="modify-slot">
+      <el-table-column-wrapper label="操作" align="center">
+        <template scope="scope">
           <div class="button-group-container">
             <el-button class="edit-button" size="small" @click="onModifyClick">编辑
             </el-button>
