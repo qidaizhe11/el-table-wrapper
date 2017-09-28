@@ -1,6 +1,11 @@
 <template>
   <div class="table-container">
-    <el-table-wrapper :data="data" :configs="configs">
+    <!-- <el-table-wrapper :data="data" :configs="configs">
+        <template scope="scope" slot="operate-slot">
+          <el-button type="text">详情</el-button>
+        </template>
+      </el-table-wrapper> -->
+    <el-table-wrapper stripe border :data="data" :columns="columns" :column-options="columnOptions">
       <template scope="scope" slot="operate-slot">
         <el-button type="text">详情</el-button>
       </template>
@@ -40,8 +45,9 @@
             prop: 'ip',
             label: 'IP',
             width: 200,
+            sortable: true,
             custom: {
-              renderHeaderContent: this.renderIpHeaderContent
+              // renderHeaderContent: this.renderIpHeaderContent
             }
           },
           {
@@ -95,6 +101,8 @@
             ip: '114.64.232.162'
           }
         ],
+        columns: tableConfigs.columns,
+        columnOptions: tableConfigs.columnDefault,
         configs: tableConfigs,
         ip: '10.20.30.40'
       }
@@ -136,10 +144,8 @@
 </script>
 
 <style lang="scss" scoped>
-  
   .table-container {
     margin: 20px 50px;
   }
-
 </style>
 

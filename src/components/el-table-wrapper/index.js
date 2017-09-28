@@ -1,4 +1,4 @@
-import ElTableWrapper from './ElTableWrapper'
+import ElTableWrapper from './ElTableWrapperMe'
 
 ElTableWrapper.install = function(Vue) {
   Vue.component(ElTableWrapper.name, ElTableWrapper)
