@@ -1,11 +1,12 @@
 <template>
   <div class="table-container">
     <!-- <el-table-wrapper :data="data" :configs="configs">
-        <template scope="scope" slot="operate-slot">
-          <el-button type="text">详情</el-button>
-        </template>
-      </el-table-wrapper> -->
-    <el-table-wrapper stripe border :data="data" :columns="columns" :column-options="columnOptions">
+            <template scope="scope" slot="operate-slot">
+              <el-button type="text">详情</el-button>
+            </template>
+          </el-table-wrapper> -->
+    <el-table-wrapper stripe border :data="data" :columns="columns" :column-options="columnOptions"
+      @sort-change="onTableSortChange">
       <template scope="scope" slot="operate-slot">
         <el-button type="text">详情</el-button>
       </template>
@@ -15,15 +16,15 @@
 
 <script>
   import Vue from 'vue'
-  // import { Table, TableColumn, Button, Input, Select, Option } from 'element-ui'
+  import { Table, TableColumn, Button, Input, Select, Option } from 'element-ui'
   import ElTableWrapper from './el-table-wrapper'
 
-  // Vue.use(Table)
-  // Vue.use(TableColumn)
-  // Vue.use(Button)
-  // Vue.use(Input)
-  // Vue.use(Select)
-  // Vue.use(Option)
+  Vue.use(Table)
+  Vue.use(TableColumn)
+  Vue.use(Button)
+  Vue.use(Input)
+  Vue.use(Select)
+  Vue.use(Option)
   Vue.use(ElTableWrapper)
 
   export default {
@@ -138,6 +139,9 @@
             </el-select>
           </div>
         )
+      },
+      onTableSortChange(value) {
+        console.log('Play, onSortChange, value:', value)
       }
     }
   }

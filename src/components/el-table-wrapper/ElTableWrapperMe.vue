@@ -27,7 +27,53 @@
       columnOptions: Object,
       pagination: [Object, Boolean]
     },
+    mounted() {
+      const refs = this.$refs
+      const tableRef = refs['ll-table']
+      this.tableRef = tableRef
+    },
     methods: {
+      onSortClick(event, column, order) {
+        event.stopPropagation()
+
+        const tableRef = this.tableRef
+        console.log('ElTableWrapperMe, onSortClick, tableRef:', tableRef)
+        if (!tableRef) {
+          return
+        }
+        const states = tableRef.store.states
+
+        // TODO: 此处过于依赖el-tabel实现底层，有待优化
+        // copy from element/package/table/src/table-header.js
+        let sortProp = states.sortProp
+        let sortOrder
+        const sortingColumn = states.sortingColumn
+
+        if (sortingColumn !== column) {
+          if (sortingColumn) {
+            sortingColumn.order = null
+          }
+          states.sortingColumn = column
+          sortProp = column.property
+        }
+
+        if (!order) {
+          sortOrder = column.order = null
+          states.sortingColumn = null
+          sortProp = null
+        } else {
+          sortOrder = column.order = order
+        }
+
+        states.sortProp = sortProp
+        states.sortOrder = sortOrder
+
+        tableRef.store.commit('changeSortCondition')
+        // copy end
+      },
+      onHeaderContentClick(e) {
+        e.stopPropagation()
+      },
       renderHeaderContentSearch() {
         return (
           <el-input class="header-content-search" {...{
@@ -66,20 +112,27 @@
                   columnAttr.sortable &&
                   <div class="sort-caret-wrapper">
                     <div class="sort-icon-wrapper">
-                      <i class="sort-icon iconfont icon-sort-up"></i>
+                      <i class="sort-icon iconfont icon-sort-up"
+                        on-click={$event => that.onSortClick($event, column, 'ascending')}>
+                      </i>
                     </div>
                     <div class="sort-icon-wrapper">
-                      <i class="sort-icon iconfont icon-sort-down"></i>
+                      <i class="sort-icon iconfont icon-sort-down"
+                        on-click={$event => that.onSortClick($event, column, 'descending')}>
+                      </i>
                     </div>
                   </div>
                 }
               </div>
-              <div class="table-header-content">
+              <div class="table-header-content" on-click={e => that.onHeaderContentClick(e)}>
                 {that.renderHeaderContent(h, columnAttr)}
               </div>
             </div>
           )
         }
+      },
+      onTableSortChange(value) {
+        console.log('ElTableWrapperMe, onTableSortChange, value:', value)
       }
     },
     render() {
@@ -91,9 +144,9 @@
       props.data = this.data || tableOptions.data
 
       return (
-        <el-table class="ll-table" {...{
+        <el-table class="ll-table" ref="ll-table" {...{
           props: props,
-          listeners: this.$listeners
+          on: this.$listeners
         }}>
           {
             this.columns.map(column => {
@@ -101,7 +154,6 @@
               if (columnProps.custom) {
                 delete columnProps.custom
               }
-              columnProps.sortable = false
               if (tableOptions.customShowHeader) {
                 columnProps.renderHeader = that.renderHeaderCommon(column)
               }
@@ -133,8 +185,11 @@
     th>.cell {
       padding-left: 0;
       padding-right: 0;
-    }
 
+      .caret-wrapper {
+        display: none;
+      }
+    }
     .table-header-title {
       box-sizing: border-box;
       padding-left: 18px;
@@ -187,10 +242,21 @@
       }
     }
 
+    .ascending .sort-caret-wrapper .sort-icon-wrapper .icon-sort-up {
+      font-size: 20px;
+      color: #48576a;
+    }
+    .descending .sort-caret-wrapper .sort-icon-wrapper .icon-sort-down {
+      font-size: 20px;
+      color: #48576a;
+      margin-left: -8px;
+    }
+
     .table-header-content {
       box-sizing: border-box;
       padding: 0 18px;
       height: 36px;
+      cursor: default;
 
       display: flex;
       justify-content: center;
