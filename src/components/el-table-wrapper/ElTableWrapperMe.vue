@@ -131,14 +131,32 @@
           )
         }
       },
-      onTableSortChange(value) {
-        console.log('ElTableWrapperMe, onTableSortChange, value:', value)
+      renderColumn(columnProps, tableProps) {
+        const propsNoCustom = {...columnProps}
+        if (propsNoCustom.custom) {
+          delete propsNoCustom.custom
+        }
+
+        if (tableProps.customShowHeader) {
+          propsNoCustom.renderHeader = this.renderHeaderCommon(columnProps)
+        }
+
+        return (
+          <el-table-column {...{
+            props: propsNoCustom
+          }}>
+            {
+              columnProps.custom && columnProps.custom.scopedSlot
+                ? this.$scopedSlots[columnProps.custom.scopedSlot] : ''
+            }
+          </el-table-column>
+        )
       }
     },
     render() {
       const that = this
       const tableOptions = Object.assign({}, defaultTableOptions, this.options || {})
-      const columnOptions = this.columnOptions || {}
+      const defaultColumnOptions = this.columnOptions || {}
 
       const props = Object.assign({}, tableOptions || {}, this.$attrs)
       props.data = this.data || tableOptions.data
@@ -150,24 +168,8 @@
         }}>
           {
             this.columns.map(column => {
-              const columnProps = Object.assign({}, columnOptions, column)
-              if (columnProps.custom) {
-                delete columnProps.custom
-              }
-              if (tableOptions.customShowHeader) {
-                columnProps.renderHeader = that.renderHeaderCommon(column)
-              }
-
-              return (
-                <el-table-column {...{
-                  props: columnProps
-                }}>
-                  {
-                    column.custom && column.custom.scopedSlot
-                      ? this.$scopedSlots[column.custom.scopedSlot] : ''
-                  }
-                </el-table-column>
-              )
+              const columnOptions = Object.assign({}, defaultColumnOptions, column)
+              return that.renderColumn(columnOptions, tableOptions)
             })
           }
         </el-table>
@@ -272,5 +274,3 @@
     }
   }
 </style>
-
-
