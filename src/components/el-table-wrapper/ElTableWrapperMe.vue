@@ -65,8 +65,12 @@
                 {
                   columnAttr.sortable &&
                   <div class="sort-caret-wrapper">
-                    <i class="sort-icon iconfont icon-sort-up"></i>
-                    <i class="sort-icon iconfont icon-sort-down"></i>
+                    <div class="sort-icon-wrapper">
+                      <i class="sort-icon iconfont icon-sort-up"></i>
+                    </div>
+                    <div class="sort-icon-wrapper">
+                      <i class="sort-icon iconfont icon-sort-down"></i>
+                    </div>
                   </div>
                 }
               </div>
@@ -146,31 +150,39 @@
         cursor: pointer;
         margin-left: 5px;
         display: inline-block;
+        vertical-align: middle;
 
-        .sort-icon {
-          font-size: 16px;
-          // font-style:
-          color: #97a8be;
-          transition: font-size 0.25s ease-out 0s;
-
+        .sort-icon-wrapper {
           display: inline-block;
+          width: 10px;
+          height: 30px;
           text-align: center;
+          overflow: hidden;
+          vertical-align: middle;
 
-          &:before {
-            box-sizing: border-box;
+          .sort-icon {
+            font-size: 14px;
+            color: #97a8be;
+            transition: font-size 0.25s ease-out 0s;
+
+            &:before {
+              box-sizing: border-box;
+            }
+            &:hover {
+              font-size: 20px;
+              color: #48576a;
+            }
           }
-        }
 
-        .sort-icon:hover {
-          font-size: 20px;
-          color: #48576a;
-        }
-
-        .icon-sort-up {
-          margin-right: -6px;
-        }
-        .icon-sort-down {
-          margin-left: -6px;
+          .icon-sort-up {
+            margin-right: -5px;
+          }
+          .icon-sort-down {
+            margin-left: -5px;
+            &:hover {
+              margin-left: -8px;
+            }
+          }
         }
       }
     }
