@@ -1,14 +1,17 @@
 <template>
   <div class="table-container">
     <!-- <el-table-wrapper :data="data" :configs="configs">
-            <template scope="scope" slot="operate-slot">
-              <el-button type="text">详情</el-button>
-            </template>
-          </el-table-wrapper> -->
+              <template scope="scope" slot="operate-slot">
+                <el-button type="text">详情</el-button>
+              </template>
+            </el-table-wrapper> -->
     <el-table-wrapper stripe border :data="data" :columns="columns" :column-options="columnOptions"
-      @sort-change="onTableSortChange" @search-change="onTableSearchChange">
+      @sort-change="onTableSortChange" @search-change="onTableSearchChange" @filter-change="onTableFilterChange">
       <template scope="scope" slot="operate-slot">
         <el-button type="text">详情</el-button>
+      </template>
+      <template scope="scope" slot="location-slot">
+        <el-tag>{{scope.row.location.name}}</el-tag>
       </template>
     </el-table-wrapper>
   </div>
@@ -16,7 +19,7 @@
 
 <script>
   import Vue from 'vue'
-  import { Table, TableColumn, Button, Input, Select, Option } from 'element-ui'
+  import { Table, TableColumn, Button, Input, Select, Option, Tag } from 'element-ui'
   import ElTableWrapper from './el-table-wrapper'
 
   Vue.use(Table)
@@ -25,6 +28,7 @@
   Vue.use(Input)
   Vue.use(Select)
   Vue.use(Option)
+  Vue.use(Tag)
   Vue.use(ElTableWrapper)
 
   export default {
@@ -54,8 +58,11 @@
           {
             prop: 'location.name',
             label: '最新位置信息',
+            sortable: true,
+            searchable: true,
             custom: {
-              renderHeaderContent: this.renderLocationHeaderContent
+              // renderHeaderContent: this.renderLocationHeaderContent,
+              scopedSlot: 'location-slot'
             }
           },
           {
@@ -133,6 +140,9 @@
       },
       onTableSearchChange(value) {
         console.log('Play, onSearchChange, value:', value)
+      },
+      onTableFilterChange(filters) {
+        console.log('Play, onFilterChange, filters:', filters)
       }
     }
   }

@@ -1,5 +1,7 @@
 
 <script>
+  import { getValueByPath } from 'element-ui/src/utils/util'
+
   const defaultTableOptions = {
     customShowHeader: true
   }
@@ -38,7 +40,6 @@
         event.stopPropagation()
 
         const tableRef = this.tableRef
-        console.log('ElTableWrapperMe, onSortClick, tableRef:', tableRef)
         if (!tableRef) {
           return
         }
@@ -74,6 +75,11 @@
       },
       onSearchClick(event, columnAttr, column) {
         event.stopPropagation()
+
+        if (columnAttr.searchable && typeof columnAttr.searchable === 'boolean') {
+          this.doSearchFilter(column, columnAttr.prop, this.searchValue)
+        }
+
         this.$emit('search-change', {
           column,
           prop: columnAttr.prop,
@@ -82,6 +88,30 @@
       },
       onHeaderContentClick(e) {
         e.stopPropagation()
+      },
+      doSearchFilter(column, prop, value) {
+        // TODO: 此处依赖el-tabel实现底层，有待优化
+
+        const tableRef = this.tableRef
+        if (!tableRef) {
+          return
+        }
+
+        const store = tableRef.store
+        store.commit('filterChange', {
+          column: column,
+          values: [value]
+        })
+      },
+      searchFilterMethod(columnAttr) {
+        const prop = columnAttr.prop
+        return function(value, row) {
+          const elementValue = prop && prop.indexOf('.') === -1
+           ? row[prop] : getValueByPath(row, prop)
+          const elementValueStr = elementValue.toString().toLowerCase()
+          const valueStr = value.toString().toLowerCase()
+          return elementValueStr.indexOf(valueStr) > -1
+        }
       },
       renderHeaderContentSearch(h, columnAttr, column) {
         const that = this
@@ -148,13 +178,18 @@
         }
       },
       renderColumn(columnProps, tableProps) {
-        const propsNoCustom = {...columnProps}
+        const propsNoCustom = { ...columnProps }
         if (propsNoCustom.custom) {
           delete propsNoCustom.custom
         }
 
         if (tableProps.customShowHeader) {
           propsNoCustom.renderHeader = this.renderHeaderCommon(columnProps)
+        }
+
+        if (columnProps.searchable && typeof columnProps.searchable === 'boolean') {
+          propsNoCustom.filterMethod = this.searchFilterMethod(columnProps)
+          propsNoCustom.columnKey = columnProps.prop
         }
 
         return (
@@ -205,6 +240,9 @@
       padding-right: 0;
 
       .caret-wrapper {
+        display: none;
+      }
+      .el-table__column-filter-trigger {
         display: none;
       }
     }
