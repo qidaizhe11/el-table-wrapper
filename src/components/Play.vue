@@ -6,7 +6,7 @@
             </template>
           </el-table-wrapper> -->
     <el-table-wrapper stripe border :data="data" :columns="columns" :column-options="columnOptions"
-      @sort-change="onTableSortChange">
+      @sort-change="onTableSortChange" @search-change="onTableSearchChange">
       <template scope="scope" slot="operate-slot">
         <el-button type="text">详情</el-button>
       </template>
@@ -47,8 +47,8 @@
             label: 'IP',
             width: 200,
             sortable: true,
+            searchable: true,
             custom: {
-              // renderHeaderContent: this.renderIpHeaderContent
             }
           },
           {
@@ -61,6 +61,7 @@
           {
             prop: 'latestTime',
             label: '最新上报时间',
+            searchable: true,
             width: 220
           },
           {
@@ -112,19 +113,6 @@
       onIpSearchClick() {
         console.log('Play, onIpSearchCLick.')
       },
-      renderIpHeaderContent(h) {
-        const that = this
-        return (
-          <el-input class="ip-header-content-input" {...{
-            props: {
-              icon: 'search',
-              value: that.ip,
-              onIconClick: that.onIpSearchClick
-            }
-          }}>
-          </el-input>
-        )
-      },
       renderLocationHeaderContent(h) {
         // const that = this
         return (
@@ -142,6 +130,9 @@
       },
       onTableSortChange(value) {
         console.log('Play, onSortChange, value:', value)
+      },
+      onTableSearchChange(value) {
+        console.log('Play, onSearchChange, value:', value)
       }
     }
   }

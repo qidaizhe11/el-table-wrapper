@@ -8,6 +8,7 @@
     name: 'ElTableWrapper',
     data() {
       return {
+        searchValue: ''
       }
     },
     props: {
@@ -71,14 +72,29 @@
         tableRef.store.commit('changeSortCondition')
         // copy end
       },
+      onSearchClick(event, columnAttr, column) {
+        event.stopPropagation()
+        this.$emit('search-change', {
+          column,
+          prop: columnAttr.prop,
+          value: this.searchValue
+        })
+      },
       onHeaderContentClick(e) {
         e.stopPropagation()
       },
-      renderHeaderContentSearch() {
+      renderHeaderContentSearch(h, columnAttr, column) {
+        const that = this
         return (
           <el-input class="header-content-search" {...{
             props: {
-              icon: 'search'
+              icon: 'search',
+              onIconClick: e => that.onSearchClick(e, columnAttr, column)
+            },
+            on: {
+              input: value => {
+                that.searchValue = value
+              }
             }
           }}>
           </el-input>
@@ -90,13 +106,13 @@
       renderHeaderContentFilterAndSearch() {
 
       },
-      renderHeaderContent(h, columnAttr) {
+      renderHeaderContent(h, columnAttr, column) {
         if (columnAttr.custom && columnAttr.custom.renderHeaderContent) {
           return columnAttr.custom.renderHeaderContent(h)
         }
 
-        if (columnAttr.sortable) {
-          return this.renderHeaderContentSearch()
+        if (columnAttr.searchable) {
+          return this.renderHeaderContentSearch(h, columnAttr, column)
         }
 
         return ''
@@ -125,7 +141,7 @@
                 }
               </div>
               <div class="table-header-content" on-click={e => that.onHeaderContentClick(e)}>
-                {that.renderHeaderContent(h, columnAttr)}
+                {that.renderHeaderContent(h, columnAttr, column)}
               </div>
             </div>
           )
