@@ -1,16 +1,14 @@
 
 <script>
+  import Vue from 'vue'
   import { getValueByPath } from 'element-ui/src/utils/util'
-
-  const defaultTableOptions = {
-    customShowHeader: true
-  }
 
   export default {
     name: 'ElTableWrapper',
     data() {
       return {
-        searchValue: ''
+        searchValue: '',
+        filters: {}
       }
     },
     props: {
@@ -26,7 +24,10 @@
           return []
         }
       },
-      options: Object,
+      showCustomHeader: {
+        type: Boolean,
+        default: true
+      },
       columnOptions: Object,
       pagination: [Object, Boolean]
     },
@@ -86,6 +87,23 @@
           value: this.searchValue
         })
       },
+      onFilterChange(column, filterdValue) {
+        // TODO: 此处依赖el-tabel实现底层，有待优化
+
+        const tableRef = this.tableRef
+        if (!tableRef) {
+          return
+        }
+
+        const values = filterdValue && Array.isArray(filterdValue)
+          ? filterdValue : [filterdValue]
+
+        const store = tableRef.store
+        store.commit('filterChange', {
+          column: column,
+          values: values
+        })
+      },
       onHeaderContentClick(e) {
         e.stopPropagation()
       },
@@ -107,7 +125,7 @@
         const prop = columnAttr.prop
         return function(value, row) {
           const elementValue = prop && prop.indexOf('.') === -1
-           ? row[prop] : getValueByPath(row, prop)
+            ? row[prop] : getValueByPath(row, prop)
           const elementValueStr = elementValue.toString().toLowerCase()
           const valueStr = value.toString().toLowerCase()
           return elementValueStr.indexOf(valueStr) > -1
@@ -130,8 +148,43 @@
           </el-input>
         )
       },
-      renderHeaderContentFilter() {
-
+      renderHeaderContentFilter(h, columnAttr, column) {
+        const that = this
+        const filters = columnAttr.filters
+        const key = columnAttr.columnKey || columnAttr.prop
+        if (!this.filters[key]) {
+          Vue.set(this.filters, key, '')
+        }
+        return (
+          <el-select class="header-content-filter" {...{
+            props: {
+              value: that.filters[key],
+              placeholder: columnAttr.filterPlaceholder,
+              multiple: columnAttr.hasOwnProperty('filterMultiple')
+                ? columnAttr.filterMultiple : true
+            },
+            on: {
+              input: value => {
+                that.filters[key] = value
+                that.onFilterChange(column, value)
+              }
+            }
+          }}>
+            {
+              filters && filters.map((filter, i) => {
+                return (
+                  <el-option {...{
+                    props: {
+                      label: filter.text,
+                      value: filter.value
+                    }
+                  }}>
+                  </el-option>
+                )
+              })
+            }
+          </el-select>
+        )
       },
       renderHeaderContentFilterAndSearch() {
 
@@ -143,6 +196,11 @@
 
         if (columnAttr.searchable) {
           return this.renderHeaderContentSearch(h, columnAttr, column)
+        }
+
+        const filterable = columnAttr.filters || columnAttr.filterMethod
+        if (filterable) {
+          return this.renderHeaderContentFilter(h, columnAttr, column)
         }
 
         return ''
@@ -170,7 +228,8 @@
                   </div>
                 }
               </div>
-              <div class="table-header-content" on-click={e => that.onHeaderContentClick(e)}>
+              <div class="table-header-content"
+                on-click={e => that.onHeaderContentClick(e)}>
                 {that.renderHeaderContent(h, columnAttr, column)}
               </div>
             </div>
@@ -183,7 +242,7 @@
           delete propsNoCustom.custom
         }
 
-        if (tableProps.customShowHeader) {
+        if (tableProps.showCustomHeader) {
           propsNoCustom.renderHeader = this.renderHeaderCommon(columnProps)
         }
 
@@ -206,17 +265,20 @@
     },
     render() {
       const that = this
-      const tableOptions = Object.assign({}, defaultTableOptions, this.options || {})
+      const tableOptions = {
+        showCustomHeader: this.showCustomHeader,
+        data: this.data
+      }
       const defaultColumnOptions = this.columnOptions || {}
 
-      const props = Object.assign({}, tableOptions || {}, this.$attrs)
-      props.data = this.data || tableOptions.data
+      const props = Object.assign({}, tableOptions, this.$attrs)
 
       return (
-        <el-table class="ll-table" ref="ll-table" {...{
-          props: props,
-          on: this.$listeners
-        }}>
+        <el-table class={'ll-table ' + (this.showCustomHeader ? 'custom-header' : '')}
+          ref="ll-table" {...{
+            props: props,
+            on: this.$listeners
+          }}>
           {
             this.columns.map(column => {
               const columnOptions = Object.assign({}, defaultColumnOptions, column)
@@ -234,17 +296,21 @@
 
   $bordor-bottom-line-color: #dfe6ec;
 
-  .ll-table {
+  .ll-table.custom-header {
     th>.cell {
-      padding-left: 0;
-      padding-right: 0;
-
       .caret-wrapper {
         display: none;
       }
       .el-table__column-filter-trigger {
         display: none;
       }
+    }
+  }
+
+  .ll-table {
+    th>.cell {
+      padding-left: 0;
+      padding-right: 0;
     }
     .table-header-title {
       box-sizing: border-box;
@@ -319,6 +385,9 @@
       align-items: center;
 
       .el-input {
+        font-size: 12px;
+      }
+      .el-select {
         font-size: 12px;
       }
 

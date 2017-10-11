@@ -1,12 +1,13 @@
 <template>
   <div class="table-container">
     <!-- <el-table-wrapper :data="data" :configs="configs">
-              <template scope="scope" slot="operate-slot">
-                <el-button type="text">详情</el-button>
-              </template>
-            </el-table-wrapper> -->
+                <template scope="scope" slot="operate-slot">
+                  <el-button type="text">详情</el-button>
+                </template>
+              </el-table-wrapper> -->
     <el-table-wrapper stripe border :data="data" :columns="columns" :column-options="columnOptions"
-      @sort-change="onTableSortChange" @search-change="onTableSearchChange" @filter-change="onTableFilterChange">
+      :show-custom-header="true" @sort-change="onTableSortChange" @search-change="onTableSearchChange"
+      @filter-change="onTableFilterChange">
       <template scope="scope" slot="operate-slot">
         <el-button type="text">详情</el-button>
       </template>
@@ -34,10 +35,6 @@
   export default {
     data() {
       const tableConfigs = {
-        table: {
-          stripe: true,
-          border: true
-        },
         columnDefault: {
           align: 'center'
         },
@@ -59,7 +56,13 @@
             prop: 'location.name',
             label: '最新位置信息',
             sortable: true,
-            searchable: true,
+            // searchable: true,
+            columnKey: 'location.name',
+            filters: [{ text: '河南', value: '河南' }, { text: '新疆', value: '新疆' }],
+            filterMethod: (value, row) => {
+              return row.location.name === value
+            },
+            filterPlaceholder: '位置',
             custom: {
               // renderHeaderContent: this.renderLocationHeaderContent,
               scopedSlot: 'location-slot'
@@ -68,7 +71,9 @@
           {
             prop: 'latestTime',
             label: '最新上报时间',
-            searchable: true,
+            // searchable: true,
+            filters: [{ text: 'hehe', value: 'hehe' }, { text: 'nimei', value: 'nimei' }],
+            filterPlaceholder: '时间',
             width: 220
           },
           {
