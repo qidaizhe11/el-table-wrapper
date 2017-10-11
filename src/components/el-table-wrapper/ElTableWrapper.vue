@@ -1,7 +1,8 @@
 
 <script>
   import Vue from 'vue'
-  import { getValueByPath } from 'element-ui/src/utils/util'
+  // import { getValueByPath } from 'element-ui/src/utils/util'
+  import { getValueByPath } from './util'
 
   export default {
     name: 'ElTableWrapper',
