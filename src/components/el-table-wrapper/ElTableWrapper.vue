@@ -1,224 +1,402 @@
 
 <script>
+  import Vue from 'vue'
+  import { getValueByPath } from 'element-ui/src/utils/util'
+
   export default {
     name: 'ElTableWrapper',
     data() {
       return {
+        searchValue: '',
+        filters: {},
+        sortColumn: null,
+        sortOrder: null,
+        searchs: {}
       }
     },
     props: {
-      // table的配置,具体见README.md
-      configs: {
-        type: Object,
-        required: true,
-        validator(value) {
-          return typeof value.columns !== 'undefined' && value.columns.length > 0
+      data: {
+        type: Array,
+        default() {
+          return []
         }
       },
-      data: Array
+      columns: {
+        type: Array,
+        default() {
+          return []
+        }
+      },
+      showCustomHeader: {
+        type: Boolean,
+        default: true
+      },
+      columnOptions: Object,
+      pagination: [Object, Boolean]
+    },
+    mounted() {
+      const refs = this.$refs
+      const tableRef = refs['ll-table']
+      this.tableRef = tableRef
     },
     methods: {
-      /**
-       * 提供element table 的clearSelection方法
-       * @param selection
-       */
-      clearSelection(selection) {
-        this.$refs.table.clearSelection(selection)
-      },
-      /**
-       * 提供element table 的toggleRowSelection方法
-       * @param row
-       * @param selected
-       */
-      toggleRowSelection(row, selected) {
-        this.$refs.table.toggleRowSelection(row, selected)
-      },
-      /**
-       * 转发element table的事件
-       * @param action
-       * @returns {Function}
-       */
-      handleEvent(action) {
-        const _self = this
-        return function() {
-          _self.$emit(action, ...arguments)
+      onSortClick(event, column, order) {
+        event.stopPropagation()
+
+        const tableRef = this.tableRef
+        if (!tableRef) {
+          return
         }
-      }
-    },
-    render() {
-      this.configs.table = this.configs.table || {}
-      const tableAttr = Object.assign({}, this.configs.tableDefault, this.configs.table || {}) // 表格属性
-      const columns = this.configs.columns  // 列配置
-      const columnDefaultAttr = this.configs.columnDefault // 列默认配置
+        const states = tableRef.store.states
 
-      // const renderHeaderCommon = function(columnAttr) {
-      //   return function(createElement, { column, $index }) {
-      //     return createElement('div', {
-      //       class: 'table-header'
-      //     }, [
-      //       createElement('div', {
-      //         class: 'table-header-title'
-      //       }, [
-      //         createElement('span', column.label)
-      //       ].concat(
-      //         columnAttr.custom && columnAttr.custom.sortable
-      //          ? [
-      //            createElement('div', {
-      //              class: 'sort-caret-wrapper'
-      //            }, [
-      //              createElement('i', {
-      //                class: 'sort-cart ascending'
-      //              }),
-      //              createElement('i', {
-      //                class: 'sort-caret descending'
-      //              })
-      //            ])
-      //          ]
-      //          : []
-      //       )),
-      //       createElement('div', {
-      //         class: 'table-header-content'
-      //       },
-      //       columnAttr.custom && columnAttr.custom.headerContent
-      //         ? [columnAttr.custom.headerContent] : []
-      //       )
-      //     ])
-      //   }
-      // }
+        // TODO: 此处过于依赖el-tabel实现底层，有待优化
+        // copy from element/package/table/src/table-header.js
+        let sortProp = states.sortProp
+        let sortOrder
+        const sortingColumn = states.sortingColumn
 
-      const renderHeaderCommon = function(columnAttr) {
-        return function(h, {column, $index}) {
+        if (sortingColumn !== column) {
+          if (sortingColumn) {
+            sortingColumn.order = null
+          }
+          states.sortingColumn = column
+          sortProp = column.property
+        }
+
+        if (!order) {
+          sortOrder = column.order = null
+          states.sortingColumn = null
+          sortProp = null
+        } else {
+          sortOrder = column.order = order
+        }
+
+        states.sortProp = sortProp
+        states.sortOrder = sortOrder
+
+        tableRef.store.commit('changeSortCondition')
+        // copy end
+      },
+      onSearchClick(event, columnAttr, column) {
+        event.stopPropagation()
+
+        if (columnAttr.searchable && typeof columnAttr.searchable === 'boolean') {
+          this.doSearchFilter(column, columnAttr.prop, this.searchValue)
+        }
+
+        this.$emit('search-change', {
+          column,
+          prop: columnAttr.prop,
+          value: this.searchValue
+        })
+      },
+      onFilterChange(column, filterdValue) {
+        // TODO: 此处依赖el-tabel实现底层，有待优化
+
+        const tableRef = this.tableRef
+        if (!tableRef) {
+          return
+        }
+
+        const values = filterdValue && Array.isArray(filterdValue)
+          ? filterdValue : [filterdValue]
+
+        const store = tableRef.store
+        store.commit('filterChange', {
+          column: column,
+          values: values
+        })
+      },
+      onHeaderContentClick(e) {
+        e.stopPropagation()
+      },
+      doSearchFilter(column, prop, value) {
+        // TODO: 此处依赖el-tabel实现底层，有待优化
+
+        const tableRef = this.tableRef
+        if (!tableRef) {
+          return
+        }
+
+        const store = tableRef.store
+        store.commit('filterChange', {
+          column: column,
+          values: [value]
+        })
+      },
+      searchFilterMethod(columnAttr) {
+        const prop = columnAttr.prop
+        return function(value, row) {
+          const elementValue = prop && prop.indexOf('.') === -1
+            ? row[prop] : getValueByPath(row, prop)
+          const elementValueStr = elementValue.toString().toLowerCase()
+          const valueStr = value.toString().toLowerCase()
+          return elementValueStr.indexOf(valueStr) > -1
+        }
+      },
+      renderHeaderContentSearch(h, columnAttr, column) {
+        const that = this
+        return (
+          <el-input class="header-content-search" {...{
+            props: {
+              icon: 'search',
+              onIconClick: e => that.onSearchClick(e, columnAttr, column)
+            },
+            on: {
+              input: value => {
+                that.searchValue = value
+              }
+            }
+          }}>
+          </el-input>
+        )
+      },
+      renderHeaderContentFilter(h, columnAttr, column) {
+        const that = this
+        const filters = columnAttr.filters
+        const key = columnAttr.columnKey || columnAttr.prop
+        if (!this.filters[key]) {
+          Vue.set(this.filters, key, '')
+        }
+        return (
+          <el-select class="header-content-filter" {...{
+            props: {
+              value: that.filters[key],
+              placeholder: columnAttr.filterPlaceholder,
+              multiple: columnAttr.hasOwnProperty('filterMultiple')
+                ? columnAttr.filterMultiple : true
+            },
+            on: {
+              input: value => {
+                that.filters[key] = value
+                that.onFilterChange(column, value)
+              }
+            }
+          }}>
+            {
+              filters && filters.map((filter, i) => {
+                return (
+                  <el-option {...{
+                    props: {
+                      label: filter.text,
+                      value: filter.value
+                    }
+                  }}>
+                  </el-option>
+                )
+              })
+            }
+          </el-select>
+        )
+      },
+      renderHeaderContentFilterAndSearch() {
+
+      },
+      renderHeaderContent(h, columnAttr, column) {
+        if (columnAttr.custom && columnAttr.custom.renderHeaderContent) {
+          return columnAttr.custom.renderHeaderContent(h)
+        }
+
+        if (columnAttr.searchable) {
+          return this.renderHeaderContentSearch(h, columnAttr, column)
+        }
+
+        const filterable = columnAttr.filters || columnAttr.filterMethod
+        if (filterable) {
+          return this.renderHeaderContentFilter(h, columnAttr, column)
+        }
+
+        return ''
+      },
+      renderHeaderCommon(columnAttr) {
+        const that = this
+        return function(h, { column, $index }) {
           return (
             <div class="table-header">
               <div class="table-header-title">
                 <span>{column.label}</span>
+                {
+                  columnAttr.sortable &&
+                  <div class="sort-caret-wrapper">
+                    <div class="sort-icon-wrapper">
+                      <i class="sort-icon iconfont icon-sort-up"
+                        on-click={$event => that.onSortClick($event, column, 'ascending')}>
+                      </i>
+                    </div>
+                    <div class="sort-icon-wrapper">
+                      <i class="sort-icon iconfont icon-sort-down"
+                        on-click={$event => that.onSortClick($event, column, 'descending')}>
+                      </i>
+                    </div>
+                  </div>
+                }
               </div>
-              <div class="table-header-content">
-                {columnAttr.custom && columnAttr.custom.renderHeaderContent &&
-                columnAttr.custom.renderHeaderContent(h)}
+              <div class="table-header-content"
+                on-click={e => that.onHeaderContentClick(e)}>
+                {that.renderHeaderContent(h, columnAttr, column)}
               </div>
             </div>
           )
         }
-      }
-
-      /*eslint-disable */
-      return <el-table ref="table"
-                       class="ll-table"
-                       style={{width: '100%'}}
-                       data={this.data ? this.data : tableAttr.data}
-                       height={tableAttr.height}
-                       max-height={tableAttr.maxHeight}
-                       stripe={tableAttr.stripe}
-                       border={tableAttr.border}
-                       fit={tableAttr.fit}
-                       show-header={tableAttr.showHeader}
-                       highlight-current-row={tableAttr.highlightCurrent}
-                       current-row-key={tableAttr.currentRowKey}
-                       row-class-name={tableAttr.rowClassName}
-                       row-style={tableAttr.rowStyle}
-                       row-key={tableAttr.rowKey}
-                       empty-text={tableAttr.emptyText}
-                       default-expand-all={tableAttr.defaultExpandAll}
-                       expand-row-keys={tableAttr.expandRowKeys}
-                       default-sort={tableAttr.defaultSort}
-                       tooltip-effect={tableAttr.tooltipEffect}
-                       on-select={this.handleEvent('select')}
-                       on-select-all={this.handleEvent('select-all')}
-                       on-selection-change={this.handleEvent('selection-change')}
-                       on-cell-mouse-enter={this.handleEvent('cell-mouse-enter')}
-                       on-cell-mouse-leave={this.handleEvent('cell-mouse-leave')}
-                       on-cell-click={this.handleEvent('cell-click')}
-                       on-cell-dblclick={this.handleEvent('cell-dblclick')}
-                       on-row-click={this.handleEvent('row-click')}
-                       on-row-contextmenu={this.handleEvent('row-contextmenu')}
-                       on-row-dblclick={this.handleEvent('row-dblclick')}
-                       on-header-click={this.handleEvent('header-click')}
-                       on-sort-change={this.handleEvent('sort-change')}
-                       on-filter-change={this.handleEvent('filter-change')}
-                       on-current-change={this.handleEvent('current-change')}
-                       on-header-dragend={this.handleEvent('header-dragend')}
-                       on-expand={this.handleEvent('expand')}
-      >
-        {
-          columns.map((column) => {
-            const columnAttr = Object.assign({}, columnDefaultAttr, column)
-
-            return <el-table-column
-              type={columnAttr.type}
-              column-key={columnAttr.columnKey}
-              label={columnAttr.label}
-              prop={columnAttr.prop}
-              width={columnAttr.width}
-              min-width={columnAttr.minWidth}
-              fixed={columnAttr.fixed}
-              // render-header={columnAttr.renderHeader}
-              render-header={renderHeaderCommon(columnAttr)}
-              sortable={columnAttr.sortable}
-              sort-method={columnAttr.sortMethod}
-              resizable={columnAttr.resizable}
-              formatter={columnAttr.formatter}
-              show-overflow-tooltip={columnAttr.showOverflowTooltip}
-              align={columnAttr.align}
-              header-align={columnAttr.headerAlign}
-              class-name={columnAttr.className}
-              label-class-name={columnAttr.labelClassName}
-              selectable={columnAttr.selectable}
-              reserve-selection={columnAttr.reserveSelection}
-              filters={columnAttr.filters}
-              filter-multiple={columnAttr.filterMultiple}
-              filter-method={columnAttr.filterMethod}
-              filtered-value={columnAttr.filterValue}
-              header-slot={column.headerSlot}
-            >
-              {
-                columnAttr.custom && columnAttr.custom.scopedSlot ?
-                  this.$scopedSlots[columnAttr.custom.scopedSlot] : ''
-              }
-            </el-table-column>
-          })
+      },
+      renderColumn(columnProps, tableProps) {
+        const propsNoCustom = { ...columnProps }
+        if (propsNoCustom.custom) {
+          delete propsNoCustom.custom
         }
-      </el-table>
-      /* eslint-enable */
+
+        if (tableProps.showCustomHeader) {
+          propsNoCustom.renderHeader = this.renderHeaderCommon(columnProps)
+        }
+
+        if (columnProps.searchable && typeof columnProps.searchable === 'boolean') {
+          propsNoCustom.filterMethod = this.searchFilterMethod(columnProps)
+          propsNoCustom.columnKey = columnProps.prop
+        }
+
+        return (
+          <el-table-column {...{
+            props: propsNoCustom
+          }}>
+            {
+              columnProps.custom && columnProps.custom.scopedSlot
+                ? this.$scopedSlots[columnProps.custom.scopedSlot] : ''
+            }
+          </el-table-column>
+        )
+      }
+    },
+    render() {
+      const that = this
+      const tableOptions = {
+        showCustomHeader: this.showCustomHeader,
+        data: this.data
+      }
+      const defaultColumnOptions = this.columnOptions || {}
+
+      const props = Object.assign({}, tableOptions, this.$attrs)
+
+      return (
+        <el-table class={'ll-table ' + (this.showCustomHeader ? 'custom-header' : '')}
+          ref="ll-table" {...{
+            props: props,
+            on: this.$listeners
+          }}>
+          {
+            this.columns.map(column => {
+              const columnOptions = Object.assign({}, defaultColumnOptions, column)
+              return that.renderColumn(columnOptions, tableOptions)
+            })
+          }
+        </el-table>
+      )
     }
   }
 </script>
 
 <style lang="scss">
+  @import '~assets/iconfont.css';
+
   $bordor-bottom-line-color: #dfe6ec;
 
-  .ll-table th>.cell {
-    padding-left: 0;
-    padding-right: 0;
+  .ll-table.custom-header {
+    th>.cell {
+      .caret-wrapper {
+        display: none;
+      }
+      .el-table__column-filter-trigger {
+        display: none;
+      }
+    }
   }
 
-  .table-header-title {
-    box-sizing: border-box;
-    padding-left: 18px;
-    padding-right: 18px;
-    height: 40px;
-    border-bottom: 1px solid $bordor-bottom-line-color;
+  .ll-table {
+    th>.cell {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .table-header-title {
+      box-sizing: border-box;
+      padding-left: 18px;
+      padding-right: 18px;
+      height: 40px;
+      border-bottom: 1px solid $bordor-bottom-line-color;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-  .table-header-content {
-    box-sizing: border-box;
-    padding: 0 18px;
-    height: 36px;
+      .sort-caret-wrapper {
+        cursor: pointer;
+        margin-left: 5px;
+        display: inline-block;
+        vertical-align: middle;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+        .sort-icon-wrapper {
+          display: inline-block;
+          width: 10px;
+          height: 30px;
+          text-align: center;
+          overflow: hidden;
+          vertical-align: middle;
 
-    .el-input {
-      font-size: 12px;
+          .sort-icon {
+            font-size: 14px;
+            color: #97a8be;
+            transition: font-size 0.25s ease-out 0s;
+
+            &:before {
+              box-sizing: border-box;
+            }
+            &:hover {
+              font-size: 20px;
+              color: #48576a;
+            }
+          }
+
+          .icon-sort-up {
+            margin-right: -5px;
+          }
+          .icon-sort-down {
+            margin-left: -5px;
+            &:hover {
+              margin-left: -8px;
+            }
+          }
+        }
+      }
     }
 
-    .el-input__inner {
-      height: 24px;
+    .ascending .sort-caret-wrapper .sort-icon-wrapper .icon-sort-up {
+      font-size: 20px;
+      color: #48576a;
+    }
+    .descending .sort-caret-wrapper .sort-icon-wrapper .icon-sort-down {
+      font-size: 20px;
+      color: #48576a;
+      margin-left: -8px;
+    }
+
+    .table-header-content {
+      box-sizing: border-box;
+      padding: 0 18px;
+      height: 36px;
+      cursor: default;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .el-input {
+        font-size: 12px;
+      }
+      .el-select {
+        font-size: 12px;
+      }
+
+      .el-input__inner {
+        height: 24px;
+      }
     }
   }
 </style>
