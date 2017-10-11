@@ -8,7 +8,10 @@
     data() {
       return {
         searchValue: '',
-        filters: {}
+        filters: {},
+        sortColumn: null,
+        sortOrder: null,
+        searchs: {}
       }
     },
     props: {
