@@ -125,7 +125,7 @@
           values: [value]
         })
       },
-      searchFilterMethod(columnAttr) {
+      getSearchFilterFn(columnAttr) {
         const prop = columnAttr.prop
         return function(value, row) {
           const elementValue = prop && prop.indexOf('.') === -1
@@ -209,7 +209,7 @@
 
         return ''
       },
-      renderHeaderCommon(columnAttr) {
+      getRenderHeaderFn(columnAttr) {
         const that = this
         return function(h, { column, $index }) {
           return (
@@ -247,11 +247,11 @@
         }
 
         if (tableProps.showCustomHeader) {
-          propsNoCustom.renderHeader = this.renderHeaderCommon(columnProps)
+          propsNoCustom.renderHeader = this.getRenderHeaderFn(columnProps)
         }
 
         if (columnProps.searchable && typeof columnProps.searchable === 'boolean') {
-          propsNoCustom.filterMethod = this.searchFilterMethod(columnProps)
+          propsNoCustom.filterMethod = this.getSearchFilterFn(columnProps)
           propsNoCustom.columnKey = columnProps.prop
         }
 
