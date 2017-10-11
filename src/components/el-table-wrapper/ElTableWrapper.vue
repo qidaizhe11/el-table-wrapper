@@ -2,17 +2,25 @@
 <script>
   import Vue from 'vue'
   // import { getValueByPath } from 'element-ui/src/utils/util'
-  import { getValueByPath } from './util'
+  import { getValueByPath, orderBy } from './util'
+
+  const defaultPagination = {
+    currentPage: 1,
+    pageSize: 10
+  }
 
   export default {
     name: 'ElTableWrapper',
     data() {
       return {
         searchValue: '',
-        filters: {},
-        sortColumn: null,
-        sortOrder: null,
-        searchs: {}
+        states: {
+          filters: {},
+          sortColumn: null,
+          sortOrder: null,
+          searchs: {},
+          pagination: this.getDefaultPagination()
+        }
       }
     },
     props: {
@@ -33,7 +41,41 @@
         default: true
       },
       columnOptions: Object,
-      pagination: [Object, Boolean]
+      pagination: [Object, {
+        type: Boolean,
+        default: true
+      }]
+    },
+    computed: {
+      localData() {
+        const states = this.states
+        const dataSource = this.data
+        let data = dataSource || []
+        // 本地排序
+        data = data.slice(0)
+        data = this.sortData(data)
+        // 筛选
+        if (states.filters) {
+          Object.keys(states.filters).forEach((columnKey) => {
+            let col = this.findColumn(columnKey)
+            if (!col) {
+              return
+            }
+            let values = states.filters[columnKey] || []
+            if (values.length === 0) {
+              return
+            }
+            const filterMethod = col.filterMethod
+            data = filterMethod ? data.filter(record => {
+              return values.some(v => filterMethod(v, record))
+            }) : data
+          })
+        }
+        return data
+      }
+    },
+    created() {
+
     },
     mounted() {
       const refs = this.$refs
@@ -108,8 +150,29 @@
           values: values
         })
       },
+      onTableSortChange({ column, prop, order }) {
+        const columnAttr = column ? this.findColumn(column.columnKey || column.prop) : null
+        this.states.sortColumn = columnAttr
+        this.states.sortOrder = order
+        this.$emit('sort-change', {
+          column: columnAttr,
+          prop,
+          order
+        })
+      },
+      onTableFilterChange(filters) {
+        this.states.filters = Object.assign({}, this.states.filters, filters)
+        this.$emit('filter-change', filters)
+      },
       onHeaderContentClick(e) {
         e.stopPropagation()
+      },
+      getDefaultPagination() {
+        const pagination = this.pagination || {}
+        return this.pagination !== false ? {
+          ...defaultPagination,
+          ...pagination
+        } : {}
       },
       doSearchFilter(column, prop, value) {
         // TODO: 此处依赖el-tabel实现底层，有待优化
@@ -125,6 +188,14 @@
           values: [value]
         })
       },
+      sortData(data) {
+        const states = this.states
+        const { sortColumn, sortOrder } = states
+        if (!sortColumn || typeof sortColumn.sortable === 'string') {
+          return data
+        }
+        return orderBy(data, sortColumn.prop, sortOrder, sortColumn.sortMethod)
+      },
       getSearchFilterFn(columnAttr) {
         const prop = columnAttr.prop
         return function(value, row) {
@@ -134,6 +205,32 @@
           const valueStr = value.toString().toLowerCase()
           return elementValueStr.indexOf(valueStr) > -1
         }
+      },
+      getMaxCurrent(total) {
+        const { currentPage, pageSize } = this.states.pagination
+        if ((currentPage - 1) * pageSize >= total) {
+          return Math.floor((total - 1) / pageSize) + 1
+        }
+        return currentPage
+      },
+      findColumn(myKey) {
+        let column
+        this.columns.map(columnAttr => {
+          if (this.getColumnKey(columnAttr) === myKey) {
+            column = columnAttr
+          }
+        })
+        return column
+      },
+      getColumnKey(columnAttr, index) {
+        return columnAttr.columnKey || columnAttr.prop || index
+      },
+      isSortColumn(columnAttr) {
+        const sortColumn = this.states.sortColumn
+        if (!columnAttr || !sortColumn) {
+          return false
+        }
+        return this.getColumnKey(sortColumn) === this.getColumnKey(columnAttr)
       },
       renderHeaderContentSearch(h, columnAttr, column) {
         const that = this
@@ -156,20 +253,20 @@
         const that = this
         const filters = columnAttr.filters
         const key = columnAttr.columnKey || columnAttr.prop
-        if (!this.filters[key]) {
-          Vue.set(this.filters, key, '')
+        if (!this.states.filters[key]) {
+          Vue.set(this.states.filters, key, '')
         }
         return (
           <el-select class="header-content-filter" {...{
             props: {
-              value: that.filters[key],
+              value: that.states.filters[key],
               placeholder: columnAttr.filterPlaceholder,
               multiple: columnAttr.hasOwnProperty('filterMultiple')
                 ? columnAttr.filterMultiple : true
             },
             on: {
               input: value => {
-                that.filters[key] = value
+                that.states.filters[key] = value
                 that.onFilterChange(column, value)
               }
             }
@@ -253,6 +350,13 @@
         if (columnProps.searchable && typeof columnProps.searchable === 'boolean') {
           propsNoCustom.filterMethod = this.getSearchFilterFn(columnProps)
           propsNoCustom.columnKey = columnProps.prop
+          delete propsNoCustom.searchable
+        }
+        if (columnProps.filterMethod) {
+          propsNoCustom.filterMethod = null
+        }
+        if (columnProps.sortable) {
+          propsNoCustom.sortable = 'custom'
         }
 
         return (
@@ -271,7 +375,7 @@
       const that = this
       const tableOptions = {
         showCustomHeader: this.showCustomHeader,
-        data: this.data
+        data: this.localData
       }
       const defaultColumnOptions = this.columnOptions || {}
 
@@ -281,7 +385,11 @@
         <el-table class={'ll-table ' + (this.showCustomHeader ? 'custom-header' : '')}
           ref="ll-table" {...{
             props: props,
-            on: this.$listeners
+            on: {
+              ...this.$listeners,
+              'filter-change': that.onTableFilterChange,
+              'sort-change': that.onTableSortChange
+            }
           }}>
           {
             this.columns.map(column => {
