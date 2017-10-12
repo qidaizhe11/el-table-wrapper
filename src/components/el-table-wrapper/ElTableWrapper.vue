@@ -157,9 +157,14 @@
         const searchValue = this.states.searches[key]
 
         if (columnAttr.searchable && columnAttr.searchable === true) {
-          const filters = {}
-          filters[key] = [searchValue]
-          this.states.filters = Object.assign({}, this.states.filters, filters)
+          this.states.filters = Object.assign({}, this.states.filters, {
+            [key]: [searchValue]
+          })
+        }
+
+        if (this.hasPagination()) {
+          const currentPage = 1
+          this.onPageCurrentChange(currentPage)
         }
 
         this.$emit('search-change', {
@@ -186,7 +191,7 @@
         })
       },
       onTableSortChange({ column, prop, order }) {
-        const columnAttr = column ? this.findColumn(column.columnKey || column.prop) : null
+        const columnAttr = column ? this.findColumn(column.columnKey || column.property) : null
         this.states.sortColumn = columnAttr
         this.states.sortOrder = order
         this.$emit('sort-change', {
@@ -196,8 +201,42 @@
         })
       },
       onTableFilterChange(filters) {
-        this.states.filters = Object.assign({}, this.states.filters, filters)
+        const nextFilters = {
+          ...this.states.filters,
+          ...filters
+        }
+
+        if (this.hasPagination()) {
+          const currentPage = 1
+          this.onPageCurrentChange(currentPage)
+        }
+
+        this.states.filters = nextFilters
         this.$emit('filter-change', filters)
+      },
+      onPageSizeChange(size) {
+        const pagination = this.states.pagination
+        if (pagination.onSizeChange) {
+          pagination.onSizeChange(size)
+        }
+        const nextPagination = {
+          ...pagination,
+          pageSize: size
+        }
+        this.states.pagination = nextPagination
+        this.$emit('pagination-change', nextPagination)
+      },
+      onPageCurrentChange(currentPage) {
+        const pagination = this.states.pagination
+        if (pagination.onCurrentChange) {
+          pagination.onCurrentChange(currentPage)
+        }
+        const nextPagination = {
+          ...pagination,
+          currentPage: currentPage || pagination.currentPage || 1
+        }
+        this.states.pagination = nextPagination
+        this.$emit('pagination-change', nextPagination)
       },
       onHeaderContentClick(e) {
         e.stopPropagation()
@@ -238,6 +277,9 @@
         return currentPage
       },
       findColumn(myKey) {
+        if (!myKey) {
+          return null
+        }
         let column
         this.columns.map(columnAttr => {
           if (this.getColumnKey(columnAttr) === myKey) {
@@ -416,6 +458,10 @@
               ...pagination,
               total: total,
               currentPage: this.getMaxCurrent(total)
+            },
+            on: {
+              'size-change': this.onPageSizeChange,
+              'current-change': this.onPageCurrentChange
             }
           }}>
           </el-pagination>

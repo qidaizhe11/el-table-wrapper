@@ -48,7 +48,7 @@
             label: 'IP',
             width: 200,
             sortable: true,
-            searchable: 'custom',
+            searchable: true,
             custom: {
             }
           },
