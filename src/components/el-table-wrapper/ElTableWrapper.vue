@@ -105,6 +105,34 @@
         return data
       }
     },
+    watch: {
+      pagination(val) {
+        if (val === false) {
+          this.states.pagination = {}
+          return
+        }
+        this.states.pagination = {
+          ...defaultPagination,
+          ...this.states.pagination,
+          ...val,
+          currentPage: val.currentPage || 1,
+          pageSize: val.pageSize || 10
+        }
+      }
+      // 'pagination.total'(val) {
+      //   this.states.pagination = {
+      //     ...this.states.pagination,
+      //     total: val
+      //   }
+      //   // this.states.pagination.total = val
+      // },
+      // 'pagination.currentPage'(val) {
+      //   this.states.pagination.currentpage = val || 1
+      // },
+      // 'pagination.pageSize'(val) {
+      //   this.states.pagination.pageSize = val || 10
+      // }
+    },
     created() {
 
     },
@@ -207,8 +235,12 @@
         }
 
         if (this.hasPagination()) {
-          const currentPage = 1
-          this.onPageCurrentChange(currentPage)
+          // Controlled current prop will not respond user interaction
+          if (!(this.pagination && typeof this.pagination === 'object' &&
+            'currentPage' in this.pagination)) {
+            const currentPage = 1
+            this.onPageCurrentChange(currentPage)
+          }
         }
 
         this.states.filters = nextFilters
@@ -234,6 +266,11 @@
         const nextPagination = {
           ...pagination,
           currentPage: currentPage || pagination.currentPage || 1
+        }
+        // Controlled current prop will not respond user interaction
+        if (this.pagination && typeof this.pagination === 'object' &&
+          'currentPage' in this.pagination) {
+          nextPagination.currentPage = pagination.currentPage
         }
         this.states.pagination = nextPagination
         this.$emit('pagination-change', nextPagination)
