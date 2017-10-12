@@ -53,7 +53,8 @@
       pagination: [Object, {
         type: Boolean,
         default: true
-      }]
+      }],
+      defaultSort: Object
     },
     computed: {
       localData() {
@@ -134,12 +135,24 @@
       // }
     },
     created() {
-
     },
     mounted() {
       const refs = this.$refs
       const tableRef = refs['ll-table']
       this.tableRef = tableRef
+
+      this.columns.map((columnAttr, i) => {
+        if (columnAttr.filters && columnAttr.filteredValue) {
+          const values = columnAttr.filteredValue || []
+          const key = this.getColumnKey(columnAttr)
+          this.states.filters[key] = values
+        }
+      })
+
+      if (this.defaulSort) {
+        this.sortColumn = this.findColumnByProp(this.defaulSort.prop)
+        this.sortOrder = this.defaulSort.order || 'ascending'
+      }
     },
     methods: {
       onSortClick(event, column, order) {
@@ -327,6 +340,18 @@
         })
         return column
       },
+      findColumnByProp(key) {
+        if (!key) {
+          return null
+        }
+        let column
+        this.columns.map(columnAttr => {
+          if (columnAttr.prop === key) {
+            column = columnAttr
+          }
+        })
+        return column
+      },
       getColumnKey(columnAttr, index) {
         return columnAttr.columnKey || columnAttr.prop || index
       },
@@ -366,19 +391,18 @@
         if (!this.states.filters[key]) {
           Vue.set(this.states.filters, key, '')
         }
+        const isMultiple = columnAttr.hasOwnProperty('filterMultiple')
+          ? columnAttr.filterMultiple : true
         let filterValue = this.states.filters[key]
-        if (filterValue && filterValue.length === 0) {
-          filterValue = ''
-        } else if (filterValue && filterValue.length === 1) {
-          filterValue = filterValue[0]
+        if (filterValue && !isMultiple) {
+          filterValue = filterValue.length > 0 ? filterValue[0] : ''
         }
         return (
           <el-select class="header-content-filter" {...{
             props: {
               value: filterValue,
               placeholder: columnAttr.filterPlaceholder,
-              multiple: columnAttr.hasOwnProperty('filterMultiple')
-                ? columnAttr.filterMultiple : true,
+              multiple: isMultiple,
               clearable: true
             },
             on: {
@@ -522,7 +546,8 @@
       const that = this
       const tableOptions = {
         showCustomHeader: this.showCustomHeader,
-        data: this.currentPageData
+        data: this.currentPageData,
+        defaultSort: this.defaultSort
       }
       const defaultColumnOptions = this.columnDefault || {}
 
