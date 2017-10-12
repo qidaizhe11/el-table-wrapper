@@ -1,12 +1,21 @@
 
 <script>
   import Vue from 'vue'
+  import { Table, TableColumn, Pagination, Input, Select, Option } from 'element-ui'
   // import { getValueByPath } from 'element-ui/src/utils/util'
   import { getValueByPath, orderBy } from './util'
 
+  Vue.use(Table)
+  Vue.use(TableColumn)
+  Vue.use(Pagination)
+  Vue.use(Input)
+  Vue.use(Select)
+  Vue.use(Option)
+
   const defaultPagination = {
     currentPage: 1,
-    pageSize: 10
+    pageSize: 10,
+    layout: 'prev,pager,next'
   }
 
   export default {
@@ -73,6 +82,25 @@
               return values.some(v => filterMethod(v, record))
             }) : data
           })
+        }
+        return data
+      },
+      currentPageData() {
+        let data = this.localData
+        const pagination = this.states.pagination
+        // 如果没有分页的话，默认全部展示
+        if (!this.hasPagination()) {
+          return data
+        }
+
+        // 分页
+        // ---
+        // 当数据量少于等于每页数量时，直接设置数据
+        // 否则进行读取分页数据
+        const currentPage = this.getMaxCurrent(pagination.total || data.length)
+        const pageSize = pagination.pageSize
+        if (data.length > pageSize) {
+          data = data.slice((currentPage - 1) * pageSize, currentPage * pageSize)
         }
         return data
       }
@@ -176,10 +204,13 @@
       },
       getDefaultPagination() {
         const pagination = this.pagination || {}
-        return this.pagination !== false ? {
+        return this.hasPagination() ? {
           ...defaultPagination,
           ...pagination
         } : {}
+      },
+      hasPagination() {
+        return this.pagination !== false
       },
       sortData(data) {
         const states = this.states
@@ -369,35 +400,58 @@
             }
           </el-table-column>
         )
+      },
+      renderPagination() {
+        if (!this.hasPagination) {
+          return null
+        }
+        const { pagination } = this.states
+        const total = pagination.total || this.localData.length
+        if (!(total > 0)) {
+          return null
+        }
+        return (
+          <el-pagination class="ll-table-pagination" {...{
+            props: {
+              ...pagination,
+              total: total,
+              currentPage: this.getMaxCurrent(total)
+            }
+          }}>
+          </el-pagination>
+        )
       }
     },
     render() {
       const that = this
       const tableOptions = {
         showCustomHeader: this.showCustomHeader,
-        data: this.localData
+        data: this.currentPageData
       }
       const defaultColumnOptions = this.columnOptions || {}
 
       const props = Object.assign({}, tableOptions, this.$attrs)
 
       return (
-        <el-table class={'ll-table ' + (this.showCustomHeader ? 'custom-header' : '')}
-          ref="ll-table" {...{
-            props: props,
-            on: {
-              ...this.$listeners,
-              'filter-change': that.onTableFilterChange,
-              'sort-change': that.onTableSortChange
+        <div class="ll-table-container">
+          <el-table class={'ll-table ' + (this.showCustomHeader ? 'custom-header' : '')}
+            ref="ll-table" {...{
+              props: props,
+              on: {
+                ...this.$listeners,
+                'filter-change': that.onTableFilterChange,
+                'sort-change': that.onTableSortChange
+              }
+            }}>
+            {
+              this.columns.map(column => {
+                const columnOptions = Object.assign({}, defaultColumnOptions, column)
+                return that.renderColumn(columnOptions, tableOptions)
+              })
             }
-          }}>
-          {
-            this.columns.map(column => {
-              const columnOptions = Object.assign({}, defaultColumnOptions, column)
-              return that.renderColumn(columnOptions, tableOptions)
-            })
-          }
-        </el-table>
+          </el-table>
+          {this.renderPagination()}
+        </div>
       )
     }
   }
@@ -417,6 +471,13 @@
         display: none;
       }
     }
+  }
+
+  .ll-table-pagination {
+    margin: 16px 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
   }
 
   .ll-table {

@@ -85,8 +85,9 @@
           }
         ]
       }
-      return {
-        data: [
+      let tableData = []
+      for (let i = 0; i < 10; ++i) {
+        tableData = tableData.concat([
           {
             latestTime: '2017-08-25 22:04:27',
             location: {
@@ -114,7 +115,10 @@
             },
             ip: '114.64.232.162'
           }
-        ],
+        ])
+      }
+      return {
+        data: tableData,
         columns: tableConfigs.columns,
         columnOptions: tableConfigs.columnDefault,
         configs: tableConfigs,
