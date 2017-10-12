@@ -209,8 +209,10 @@
           return
         }
 
-        const values = filterdValue && Array.isArray(filterdValue)
-          ? filterdValue : [filterdValue]
+        let values = []
+        if (filterdValue) {
+          values = Array.isArray(filterdValue) ? filterdValue : [filterdValue]
+        }
 
         const store = tableRef.store
         store.commit('filterChange', {
@@ -364,18 +366,29 @@
         if (!this.states.filters[key]) {
           Vue.set(this.states.filters, key, '')
         }
+        let filterValue = this.states.filters[key]
+        if (filterValue && filterValue.length === 0) {
+          filterValue = ''
+        } else if (filterValue && filterValue.length === 1) {
+          filterValue = filterValue[0]
+        }
         return (
           <el-select class="header-content-filter" {...{
             props: {
-              value: that.states.filters[key],
+              value: filterValue,
               placeholder: columnAttr.filterPlaceholder,
               multiple: columnAttr.hasOwnProperty('filterMultiple')
-                ? columnAttr.filterMultiple : true
+                ? columnAttr.filterMultiple : true,
+              clearable: true
             },
             on: {
               input: value => {
                 that.states.filters[key] = value
                 that.onFilterChange(column, value)
+              },
+              clear: () => {
+                that.states.filters[key] = ''
+                that.onFilterChange(column, '')
               }
             }
           }}>

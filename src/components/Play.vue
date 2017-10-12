@@ -63,6 +63,7 @@
               return row.location.name === value
             },
             filterPlaceholder: '位置',
+            filterMultiple: false,
             custom: {
               // renderHeaderContent: this.renderLocationHeaderContent,
               scopedSlot: 'location-slot'
