@@ -196,7 +196,7 @@
         }
 
         this.$emit('search-change', {
-          column,
+          columnAttr,
           prop: columnAttr.prop,
           value: searchValue
         })
