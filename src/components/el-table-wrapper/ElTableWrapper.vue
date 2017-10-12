@@ -18,7 +18,7 @@
           filters: {},
           sortColumn: null,
           sortOrder: null,
-          searchs: {},
+          searches: {},
           pagination: this.getDefaultPagination()
         }
       }
@@ -65,7 +65,10 @@
             if (values.length === 0) {
               return
             }
-            const filterMethod = col.filterMethod
+            let filterMethod = col.filterMethod
+            if (col.searchable) {
+              filterMethod = col.searchMethod || this.getDefaultSearchMethod(col)
+            }
             data = filterMethod ? data.filter(record => {
               return values.some(v => filterMethod(v, record))
             }) : data
@@ -122,15 +125,19 @@
       },
       onSearchClick(event, columnAttr, column) {
         event.stopPropagation()
+        const key = this.getColumnKey(columnAttr)
+        const searchValue = this.states.searches[key]
 
-        if (columnAttr.searchable && typeof columnAttr.searchable === 'boolean') {
-          this.doSearchFilter(column, columnAttr.prop, this.searchValue)
+        if (columnAttr.searchable && columnAttr.searchable === true) {
+          const filters = {}
+          filters[key] = [searchValue]
+          this.states.filters = Object.assign({}, this.states.filters, filters)
         }
 
         this.$emit('search-change', {
           column,
           prop: columnAttr.prop,
-          value: this.searchValue
+          value: searchValue
         })
       },
       onFilterChange(column, filterdValue) {
@@ -174,20 +181,6 @@
           ...pagination
         } : {}
       },
-      doSearchFilter(column, prop, value) {
-        // TODO: 此处依赖el-tabel实现底层，有待优化
-
-        const tableRef = this.tableRef
-        if (!tableRef) {
-          return
-        }
-
-        const store = tableRef.store
-        store.commit('filterChange', {
-          column: column,
-          values: [value]
-        })
-      },
       sortData(data) {
         const states = this.states
         const { sortColumn, sortOrder } = states
@@ -196,7 +189,7 @@
         }
         return orderBy(data, sortColumn.prop, sortOrder, sortColumn.sortMethod)
       },
-      getSearchFilterFn(columnAttr) {
+      getDefaultSearchMethod(columnAttr) {
         const prop = columnAttr.prop
         return function(value, row) {
           const elementValue = prop && prop.indexOf('.') === -1
@@ -234,6 +227,10 @@
       },
       renderHeaderContentSearch(h, columnAttr, column) {
         const that = this
+        const key = this.getColumnKey(columnAttr)
+        if (!this.states.searches[key]) {
+          Vue.set(this.states.searches, key, '')
+        }
         return (
           <el-input class="header-content-search" {...{
             props: {
@@ -242,7 +239,7 @@
             },
             on: {
               input: value => {
-                that.searchValue = value
+                that.states.searches[key] = value
               }
             }
           }}>
@@ -252,7 +249,8 @@
       renderHeaderContentFilter(h, columnAttr, column) {
         const that = this
         const filters = columnAttr.filters
-        const key = columnAttr.columnKey || columnAttr.prop
+        // const key = columnAttr.columnKey || columnAttr.prop
+        const key = this.getColumnKey(columnAttr)
         if (!this.states.filters[key]) {
           Vue.set(this.states.filters, key, '')
         }
@@ -347,9 +345,11 @@
           propsNoCustom.renderHeader = this.getRenderHeaderFn(columnProps)
         }
 
-        if (columnProps.searchable && typeof columnProps.searchable === 'boolean') {
-          propsNoCustom.filterMethod = this.getSearchFilterFn(columnProps)
-          propsNoCustom.columnKey = columnProps.prop
+        if (columnProps.searchable && columnProps.searchable === true) {
+          // propsNoCustom.filterMethod = this.getSearchFilterFn(columnProps)
+          // propsNoCustom.columnKey = columnProps.columnKey || columnProps
+          propsNoCustom.filterMethod = null
+          propsNoCustom.filters = null
           delete propsNoCustom.searchable
         }
         if (columnProps.filterMethod) {
