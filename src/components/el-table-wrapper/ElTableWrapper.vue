@@ -49,7 +49,7 @@
         type: Boolean,
         default: true
       },
-      columnOptions: Object,
+      columnDefault: Object,
       pagination: [Object, {
         type: Boolean,
         default: true
@@ -474,7 +474,7 @@
         showCustomHeader: this.showCustomHeader,
         data: this.currentPageData
       }
-      const defaultColumnOptions = this.columnOptions || {}
+      const defaultColumnOptions = this.columnDefault || {}
 
       const props = Object.assign({}, tableOptions, this.$attrs)
 
@@ -504,7 +504,7 @@
 </script>
 
 <style lang="scss">
-  @import '~assets/iconfont.css';
+  @import './assets/iconfont.css';
 
   $bordor-bottom-line-color: #dfe6ec;
 

@@ -5,7 +5,7 @@
                   <el-button type="text">详情</el-button>
                 </template>
               </el-table-wrapper> -->
-    <el-table-wrapper stripe border :data="data" :columns="columns" :column-options="columnOptions"
+    <el-table-wrapper stripe border :data="data" :columns="columns" :column-default="columnDefault"
       :show-custom-header="true" @sort-change="onTableSortChange" @search-change="onTableSearchChange"
       @filter-change="onTableFilterChange">
       <template scope="scope" slot="operate-slot">
@@ -120,8 +120,7 @@
       return {
         data: tableData,
         columns: tableConfigs.columns,
-        columnOptions: tableConfigs.columnDefault,
-        configs: tableConfigs,
+        columnDefault: tableConfigs.columnDefault,
         ip: '10.20.30.40'
       }
     },
