@@ -107,32 +107,22 @@
       }
     },
     watch: {
-      pagination(val) {
-        if (val === false) {
-          this.states.pagination = {}
-          return
-        }
-        this.states.pagination = {
-          ...defaultPagination,
-          ...this.states.pagination,
-          ...val,
-          currentPage: val.currentPage || 1,
-          pageSize: val.pageSize || 10
-        }
+      pagination: {
+        handler: function(val) {
+          if (val === false) {
+            this.states.pagination = {}
+            return
+          }
+          this.states.pagination = {
+            ...defaultPagination,
+            ...this.states.pagination,
+            ...val,
+            currentPage: val.currentPage || 1,
+            pageSize: val.pageSize || 10
+          }
+        },
+        deep: true
       }
-      // 'pagination.total'(val) {
-      //   this.states.pagination = {
-      //     ...this.states.pagination,
-      //     total: val
-      //   }
-      //   // this.states.pagination.total = val
-      // },
-      // 'pagination.currentPage'(val) {
-      //   this.states.pagination.currentpage = val || 1
-      // },
-      // 'pagination.pageSize'(val) {
-      //   this.states.pagination.pageSize = val || 10
-      // }
     },
     created() {
     },
