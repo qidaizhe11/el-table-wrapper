@@ -155,42 +155,32 @@
       }
     },
     methods: {
-      onSortClick(event, column, order) {
+      onSortClick(event, columnAttr, order) {
         event.stopPropagation()
 
-        const tableRef = this.tableRef
-        if (!tableRef) {
-          return
-        }
-        const states = tableRef.store.states
-
-        // TODO: 此处过于依赖el-tabel实现底层，有待优化
-        // copy from element/package/table/src/table-header.js
-        let sortProp = states.sortProp
-        let sortOrder
-        const sortingColumn = states.sortingColumn
-
-        if (sortingColumn !== column) {
-          if (sortingColumn) {
-            sortingColumn.order = null
+        let { sortColumn, sortOrder } = this.states
+        // 只同时允许一列进行排序，否则会导致排序顺序的逻辑问题
+        const isSortColumn = this.isSortColumn(columnAttr)
+        if (!isSortColumn) {  // 当前列未排序
+          sortColumn = columnAttr
+          sortOrder = order
+        } else {  // 当前列已排序
+          if (sortOrder === order) {
+            sortOrder = ''
+            sortColumn = null
+          } else {  // 切换为排序状态
+            sortOrder = order
           }
-          states.sortingColumn = column
-          sortProp = column.property
         }
 
-        if (!order) {
-          sortOrder = column.order = null
-          states.sortingColumn = null
-          sortProp = null
-        } else {
-          sortOrder = column.order = order
-        }
+        this.states.sortOrder = sortOrder
+        this.states.sortColumn = sortColumn
 
-        states.sortProp = sortProp
-        states.sortOrder = sortOrder
-
-        tableRef.store.commit('changeSortCondition')
-        // copy end
+        this.$emit('sort-change', {
+          column: sortColumn,
+          prop: sortColumn ? sortColumn.prop : null,
+          order: sortOrder
+        })
       },
       onSearchClick(event, columnAttr, column) {
         event.stopPropagation()
@@ -209,28 +199,20 @@
         }
 
         this.$emit('search-change', {
-          columnAttr,
+          column: columnAttr,
           prop: columnAttr.prop,
           value: searchValue
         })
       },
-      onFilterChange(column, filterdValue) {
-        // TODO: 此处依赖el-tabel实现底层，有待优化
-
-        const tableRef = this.tableRef
-        if (!tableRef) {
-          return
-        }
-
+      onFilterChange(columnAttr, filterdValue) {
         let values = []
         if (filterdValue) {
           values = Array.isArray(filterdValue) ? filterdValue : [filterdValue]
         }
+        const key = this.getColumnKey(columnAttr)
 
-        const store = tableRef.store
-        store.commit('filterChange', {
-          column: column,
-          values: values
+        this.onTableFilterChange({
+          [key]: values
         })
       },
       onTableSortChange({ column, prop, order }) {
@@ -408,11 +390,11 @@
             on: {
               input: value => {
                 that.states.filters[key] = value
-                that.onFilterChange(column, value)
+                that.onFilterChange(columnAttr, value)
               },
               clear: () => {
                 that.states.filters[key] = ''
-                that.onFilterChange(column, '')
+                that.onFilterChange(columnAttr, '')
               }
             }
           }}>
@@ -457,18 +439,18 @@
           return (
             <div class="table-header">
               <div class="table-header-title">
-                <span>{column.label}</span>
+                <span>{columnAttr.label}</span>
                 {
                   columnAttr.sortable &&
                   <div class="sort-caret-wrapper">
                     <div class="sort-icon-wrapper">
                       <i class="sort-icon iconfont icon-sort-up"
-                        on-click={$event => that.onSortClick($event, column, 'ascending')}>
+                        on-click={$event => that.onSortClick($event, columnAttr, 'ascending')}>
                       </i>
                     </div>
                     <div class="sort-icon-wrapper">
                       <i class="sort-icon iconfont icon-sort-down"
-                        on-click={$event => that.onSortClick($event, column, 'descending')}>
+                        on-click={$event => that.onSortClick($event, columnAttr, 'descending')}>
                       </i>
                     </div>
                   </div>
