@@ -137,10 +137,6 @@
     created() {
     },
     mounted() {
-      const refs = this.$refs
-      const tableRef = refs['ll-table']
-      this.tableRef = tableRef
-
       this.columns.map((columnAttr, i) => {
         if (columnAttr.filters && columnAttr.filteredValue) {
           const values = columnAttr.filteredValue || []
@@ -475,8 +471,6 @@
         }
 
         if (columnProps.searchable && columnProps.searchable === true) {
-          // propsNoCustom.filterMethod = this.getSearchFilterFn(columnProps)
-          // propsNoCustom.columnKey = columnProps.columnKey || columnProps
           propsNoCustom.filterMethod = null
           propsNoCustom.filters = null
           delete propsNoCustom.searchable
