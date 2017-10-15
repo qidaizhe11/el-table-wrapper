@@ -4,6 +4,7 @@
   import { Table, TableColumn, Pagination, Input, Select, Option } from 'element-ui'
   // import { getValueByPath } from 'element-ui/src/utils/util'
   import { getValueByPath, orderBy } from './util'
+  import debounce from 'lodash/debounce'
 
   Vue.use(Table)
   Vue.use(TableColumn)
@@ -172,14 +173,32 @@
           order: sortOrder
         })
       },
-      onSearchClick(event, columnAttr, column) {
+      onSearchClearClick(event, columnAttr) {
         event.stopPropagation()
         const key = this.getColumnKey(columnAttr)
+        this.states.searches[key] = ''
+        this.onSearchChange(columnAttr, '')
+      },
+      onSearchEnterPress(event, columnAttr) {
+        event.stopPropagation()
+        event.preventDefault()
+        const key = this.getColumnKey(columnAttr)
         const searchValue = this.states.searches[key]
+        this.onSearchChange(columnAttr, searchValue)
+      },
+      onSearchInput(columnAttr, value) {
+        const key = this.getColumnKey(columnAttr)
+        this.states.searches[key] = value
+        if ('searchOnInput' in columnAttr && columnAttr.searchOnInput !== false) {
+          this.onSearchChange(columnAttr, value)
+        }
+      },
+      onSearchChange(columnAttr, value) {
+        const key = this.getColumnKey(columnAttr)
 
         if (columnAttr.searchable && columnAttr.searchable === true) {
           this.states.filters = Object.assign({}, this.states.filters, {
-            [key]: [searchValue]
+            [key]: [value]
           })
         }
 
@@ -191,7 +210,7 @@
         this.$emit('search-change', {
           column: columnAttr,
           prop: columnAttr.prop,
-          value: searchValue
+          value: value
         })
       },
       onFilterChange(columnAttr, filterdValue) {
@@ -344,15 +363,28 @@
         if (!this.states.searches[key]) {
           Vue.set(this.states.searches, key, '')
         }
+        const value = this.states.searches[key] || ''
+        const props = value ? {
+          icon: 'close',
+          onIconClick: e => that.onSearchClearClick(e, columnAttr)
+        } : {}
+        props.value = value
         return (
           <el-input class="header-content-search" {...{
-            props: {
-              icon: 'search',
-              onIconClick: e => that.onSearchClick(e, columnAttr, column)
-            },
+            props: props,
             on: {
-              input: value => {
-                that.states.searches[key] = value
+              input: debounce(value => {
+                that.onSearchInput(columnAttr, value)
+              }, 300)
+            },
+            nativeOn: {
+              keyup: e => {
+                // if (e.target !== e.currentTarget) {
+                //   return
+                // }
+                if (e.keyCode === 13) {  // Enter
+                  that.onSearchEnterPress(e, columnAttr)
+                }
               }
             }
           }}>

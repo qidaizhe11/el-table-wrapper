@@ -52,8 +52,7 @@
             width: 200,
             sortable: true,
             searchable: true,
-            custom: {
-            }
+            searchOnInput: false
           },
           {
             prop: 'location.name',
