@@ -4,7 +4,7 @@
   import { Table, TableColumn, Pagination, Input, Select, Option } from 'element-ui'
   // import { getValueByPath } from 'element-ui/src/utils/util'
   import { getValueByPath, orderBy } from './util'
-  import debounce from 'lodash/debounce'
+  import debounce from 'lodash.debounce'
 
   Vue.use(Table)
   Vue.use(TableColumn)
