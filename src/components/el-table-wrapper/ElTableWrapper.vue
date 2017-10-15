@@ -18,6 +18,8 @@
     layout: 'prev,pager,next'
   }
 
+  const defaultFilterMultiple = true
+
   export default {
     name: 'ElTableWrapper',
     data() {
@@ -332,6 +334,10 @@
         }
         return this.getColumnKey(sortColumn) === this.getColumnKey(columnAttr)
       },
+      isFilterMultiple(columnAttr) {
+        return columnAttr.hasOwnProperty('filterMultiple')
+          ? columnAttr.filterMultiple : defaultFilterMultiple
+      },
       renderHeaderContentSearch(h, columnAttr, column) {
         const that = this
         const key = this.getColumnKey(columnAttr)
@@ -360,8 +366,7 @@
         if (!this.states.filters[key]) {
           Vue.set(this.states.filters, key, '')
         }
-        const isMultiple = columnAttr.hasOwnProperty('filterMultiple')
-          ? columnAttr.filterMultiple : true
+        const isMultiple = this.isFilterMultiple(columnAttr)
         let filterValue = this.states.filters[key]
         if (filterValue && !isMultiple) {
           filterValue = filterValue.length > 0 ? filterValue[0] : ''
