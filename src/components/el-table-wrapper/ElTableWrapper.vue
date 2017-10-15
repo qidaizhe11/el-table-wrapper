@@ -22,7 +22,6 @@
     name: 'ElTableWrapper',
     data() {
       return {
-        searchValue: '',
         states: {
           filters: {},
           sortColumn: null,
@@ -136,12 +135,12 @@
       })
 
       if (this.defaulSort) {
-        this.sortColumn = this.findColumnByProp(this.defaulSort.prop)
-        this.sortOrder = this.defaulSort.order || 'ascending'
+        this.states.sortColumn = this.findColumnByProp(this.defaulSort.prop)
+        this.states.sortOrder = this.defaulSort.order || 'ascending'
       }
     },
     methods: {
-      onSortClick(event, columnAttr, order) {
+      onSortClick(event, {columnAttr, order, column}) {
         event.stopPropagation()
 
         let { sortColumn, sortOrder } = this.states
@@ -161,6 +160,9 @@
 
         this.states.sortOrder = sortOrder
         this.states.sortColumn = sortColumn
+
+        // TODO: 此处依赖el-table实现底层，有待废除
+        column.order = sortOrder
 
         this.$emit('sort-change', {
           column: sortColumn,
@@ -354,7 +356,6 @@
       renderHeaderContentFilter(h, columnAttr, column) {
         const that = this
         const filters = columnAttr.filters
-        // const key = columnAttr.columnKey || columnAttr.prop
         const key = this.getColumnKey(columnAttr)
         if (!this.states.filters[key]) {
           Vue.set(this.states.filters, key, '')
@@ -421,22 +422,31 @@
       },
       getRenderHeaderFn(columnAttr) {
         const that = this
+        // TODO: sort classname should be here with table-header-title
         return function(h, { column, $index }) {
           return (
             <div class="table-header">
-              <div class="table-header-title">
+              <div class={'table-header-title'}>
                 <span>{columnAttr.label}</span>
                 {
                   columnAttr.sortable &&
                   <div class="sort-caret-wrapper">
                     <div class="sort-icon-wrapper">
                       <i class="sort-icon iconfont icon-sort-up"
-                        on-click={$event => that.onSortClick($event, columnAttr, 'ascending')}>
+                        on-click={$event => that.onSortClick($event, {
+                          column: column,
+                          columnAttr: columnAttr,
+                          order: 'ascending'
+                        })}>
                       </i>
                     </div>
                     <div class="sort-icon-wrapper">
                       <i class="sort-icon iconfont icon-sort-down"
-                        on-click={$event => that.onSortClick($event, columnAttr, 'descending')}>
+                        on-click={$event => that.onSortClick($event, {
+                          column: column,
+                          columnAttr: columnAttr,
+                          order: 'descending'
+                        })}>
                       </i>
                     </div>
                   </div>
@@ -521,7 +531,7 @@
 
       return (
         <div class="ll-table-container">
-          <el-table class={'ll-table ' + (this.showCustomHeader ? 'custom-header' : '')}
+          <el-table class={{ 'll-table': true, 'custom-header': this.showCustomHeader }}
             ref="ll-table" {...{
               props: props,
               on: {
@@ -533,7 +543,7 @@
             {
               this.columns.map(column => {
                 const columnOptions = Object.assign({}, defaultColumnOptions, column)
-                return that.renderColumn(columnOptions, tableOptions)
+                return this.renderColumn(columnOptions, tableOptions)
               })
             }
           </el-table>
@@ -601,13 +611,13 @@
             font-size: 14px;
             color: #97a8be;
             transition: font-size 0.25s ease-out 0s;
+            transition: margin 0.1s ease-in 0s;
 
             &:before {
               box-sizing: border-box;
             }
             &:hover {
-              font-size: 20px;
-              color: #48576a;
+              color: lighten(#48576a, 10);
             }
           }
 
@@ -621,6 +631,16 @@
             }
           }
         }
+      }
+
+      &.ascending .sort-caret-wrapper .sort-icon-wrapper .icon-sort-up {
+        font-size: 20px;
+        color: #48576a;
+      }
+      &.descending .sort-caret-wrapper .sort-icon-wrapper .icon-sort-down {
+        font-size: 20px;
+        color: #48576a;
+        margin-left: -8px;
       }
     }
 
