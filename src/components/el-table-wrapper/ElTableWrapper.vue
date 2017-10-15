@@ -197,9 +197,10 @@
         const key = this.getColumnKey(columnAttr)
 
         if (columnAttr.searchable && columnAttr.searchable === true) {
-          this.states.filters = Object.assign({}, this.states.filters, {
+          this.states.filters = {
+            ...this.states.filters,
             [key]: [value]
-          })
+          }
         }
 
         if (this.hasPagination()) {
@@ -564,7 +565,10 @@
       }
       const defaultColumnOptions = this.columnDefault || {}
 
-      const props = Object.assign({}, tableOptions, this.$attrs)
+      const props = {
+        ...tableOptions,
+        ...this.$attrs
+      }
 
       return (
         <div class="ll-table-container">
@@ -586,7 +590,10 @@
             }
             {
               this.columns.map(column => {
-                const columnOptions = Object.assign({}, defaultColumnOptions, column)
+                const columnOptions = {
+                  ...defaultColumnOptions,
+                  ...column
+                }
                 return this.renderColumn(columnOptions, tableOptions)
               })
             }
