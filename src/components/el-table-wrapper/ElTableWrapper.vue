@@ -140,7 +140,7 @@
       }
     },
     methods: {
-      onSortClick(event, {columnAttr, order, column}) {
+      onSortClick(event, { columnAttr, order, column }) {
         event.stopPropagation()
 
         let { sortColumn, sortOrder } = this.states
@@ -538,8 +538,15 @@
                 ...this.$listeners,
                 'filter-change': that.onTableFilterChange,
                 'sort-change': that.onTableSortChange
-              }
+              },
+              slot: 'append'
             }}>
+            {
+              this.$slots.append &&
+              <div class="ll-table-body-append" slot='append'>
+                {this.$slots.append}
+              </div>
+            }
             {
               this.columns.map(column => {
                 const columnOptions = Object.assign({}, defaultColumnOptions, column)
