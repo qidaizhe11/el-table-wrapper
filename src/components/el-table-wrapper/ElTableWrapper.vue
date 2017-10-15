@@ -413,7 +413,7 @@
           return this.renderHeaderContentSearch(h, columnAttr, column)
         }
 
-        const filterable = columnAttr.filters || columnAttr.filterMethod
+        const filterable = columnAttr.filters
         if (filterable) {
           return this.renderHeaderContentFilter(h, columnAttr, column)
         }
