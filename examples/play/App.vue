@@ -6,7 +6,7 @@
 
 <script>
 // import Hello from './components/Hello'
-import Play from './components/Play'
+import Play from './Play'
 
 export default {
   name: 'app',

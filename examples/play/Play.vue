@@ -24,7 +24,7 @@
 <script>
   import Vue from 'vue'
   import { Table, TableColumn, Button, Input, Select, Option, Tag } from 'element-ui'
-  import ElTableWrapper from './el-table-wrapper'
+  import ElTableWrapper from '@/index'
 
   Vue.use(Table)
   Vue.use(TableColumn)
