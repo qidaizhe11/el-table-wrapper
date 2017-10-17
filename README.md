@@ -1,30 +1,48 @@
 # element-table-wrapper
 
-> A Vue.js project
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![npm download][download-image]][download-url]
+[![gzip size][badgesize-image]][badgesize-url]
 
-## Build Setup
+[npm-image]: https://img.shields.io/npm/v/element-table-wrapper.svg
+[npm-url]: https://www.npmjs.org/package/element-table-wrapper
+[travis-image]: https://travis-ci.org/qidaizhe11/element-table-wrapper.svg?branch=master
+[travis-url]: https://travis-ci.org/qidaizhe11/element-table-wrapper
+<!-- [coveralls-image]: https://img.shields.io/coveralls/react-component/table.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/react-component/table?branch=master -->
+[download-image]: https://img.shields.io/npm/dm/element-table-wrapper.svg
+[download-url]: https://npmjs.org/package/element-table-wrapper
+[badgesize-image]: http://img.badgesize.io/https://unpkg.com/element-table-wrapper?compression=gzip
+[badgesize-url]: https://github.com/qidaizhe11/element-table-wrapper
 
-``` bash
-# install dependencies
-npm install
+> A Vue2 table component based on el-table of Element UI with pagination support.
 
-# serve with hot reload at localhost:8080
-npm run dev
+## install
 
-# build for production with minification
-npm run build
+[![element-table-wrapper](https://nodei.co/npm/element-table-wrapper.png)](https://npmjs.org/package/element-table-wrapper)
 
-# build for production and view the bundle analyzer report
-npm run build --report
+## Example
 
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
+## Usage
+```
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## API
+
+### Table Attributes
+
+### Table Events
+
+### Table Column Attributes
+
+## Development
+
+```
+npm install
+npm run play
+```
+
+## License
+
+element-table-wrapper is released under the MIT license.
