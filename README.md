@@ -18,7 +18,7 @@
 
 > A Vue2 table component based on el-table of Element UI with pagination support.
 
-## install
+## Install
 
 [![element-table-wrapper](https://nodei.co/npm/element-table-wrapper.png)](https://npmjs.org/package/element-table-wrapper)
 
