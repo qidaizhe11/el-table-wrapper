@@ -32,7 +32,7 @@ var webpackConfig = merge(baseWebpackConfig, {
   devtool: config.build.productionSourceMap ? '#source-map' : false,
   output: {
     path: config.build.assetsRoot,
-    filename: 'index.min.js',
+    filename: 'el-table-wrapper.min.js',
     library: 'ElTableWrapper',
     libraryTarget: 'umd'
   },
