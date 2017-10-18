@@ -40,7 +40,7 @@
       },
       showCustomHeader: {
         type: Boolean,
-        default: true
+        default: false
       },
       columnDefault: Object,
       pagination: [Object, {
