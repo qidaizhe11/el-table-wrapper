@@ -451,17 +451,20 @@
       },
       getRenderHeaderFn(columnAttr) {
         const that = this
+        /* eslint-disable */
+        const headerAlign = columnAttr.headerAlign || columnAttr.align || ''
+        /* eslint-enable */
         // TODO: sort classname should be here with table-header-title
         return function(h, { column, $index }) {
           return (
             <div class="table-header">
-              <div class={'table-header-title'}>
+              <div class={{'table-header-title': true, headerAlign: true}}>
                 <span>{columnAttr.label}</span>
                 {
                   columnAttr.sortable &&
                   <div class="sort-caret-wrapper">
                     <div class="sort-icon-wrapper">
-                      <i class="sort-icon iconfont icon-sort-up"
+                      <i class="sort-icon ll-table-iconfont icon-sort-up"
                         on-click={$event => that.onSortClick($event, {
                           column: column,
                           columnAttr: columnAttr,
@@ -470,7 +473,7 @@
                       </i>
                     </div>
                     <div class="sort-icon-wrapper">
-                      <i class="sort-icon iconfont icon-sort-down"
+                      <i class="sort-icon ll-table-iconfont icon-sort-down"
                         on-click={$event => that.onSortClick($event, {
                           column: column,
                           columnAttr: columnAttr,

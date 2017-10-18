@@ -1,4 +1,13 @@
+# Show Custom Header
 
+Table属性 `show-custom-header` 控制表格头搜索/筛选行的显示与否
+
+## render custom header
+
+```html
+/*vue*/
+<desc>
+</desc>
 <template>
   <el-table-wrapper :data="data" :columns="columns" :show-custom-header="true">
   </el-table-wrapper>
@@ -6,14 +15,6 @@
 
 
 <script>
-  import Vue from 'vue'
-  import ElementUI from 'element-ui'
-  import 'element-ui/lib/theme-default/index.css'
-  import ElTableWrapper from 'element-table-wrapper'
-
-  Vue.use(ElementUI)
-  Vue.use(ElTableWrapper)
-
   export default {
 
     data() {
@@ -40,3 +41,4 @@
     }
   }
 </script>
+```
