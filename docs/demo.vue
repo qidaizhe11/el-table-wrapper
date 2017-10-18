@@ -1,35 +1,41 @@
-
 <template>
-  <el-table-wrapper :data="data" :columns="columns" :show-custom-header="true">
+  <el-table-wrapper :data="data" :columns="columns">
   </el-table-wrapper>
 </template>
 
 
 <script>
-  import Vue from 'vue'
-  import ElementUI from 'element-ui'
-  import 'element-ui/lib/theme-default/index.css'
-  import ElTableWrapper from 'element-table-wrapper'
-
-  Vue.use(ElementUI)
-  Vue.use(ElTableWrapper)
-
   export default {
 
     data() {
       const data = [
-        { name: 'Jack', age: 28, address: 'some where', key: '1' },
-        { name: 'Rose', age: 36, address: 'some where', key: '2' },
+        {
+          date: '2016-05-03',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles'
+        }, {
+          date: '2016-05-02',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles'
+        }, {
+          date: '2016-05-04',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles'
+        }, {
+          date: '2016-05-01',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles'
+        }
       ]
 
       const columns = [{
-        prop: 'name', label: 'Name', width: 100
+        prop: 'name', label: 'Name', width: 160
       }, {
-        prop: 'age', label: 'Age', width: 100, sortable: true
+        prop: 'age', label: 'Age', width: 120
       }, {
-        prop: 'address', label: 'Address', width: 200
+        prop: 'address', label: 'Address'
       }, {
-        label: 'Operate'
+        prop: 'date', label: 'Date', width: 180
       }]
 
       return {

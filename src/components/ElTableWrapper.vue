@@ -635,7 +635,7 @@
       border-bottom: 1px solid $bordor-bottom-line-color;
 
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
 
       &.left {
@@ -643,6 +643,9 @@
       }
       &.right {
         justify-content: flex-end;
+      }
+      &.center {
+        justify-content: center;
       }
 
       .sort-caret-wrapper {

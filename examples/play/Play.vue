@@ -39,8 +39,8 @@
     data() {
       const tableConfig = {
         columnDefault: {
-          align: 'right',
-          headerAlign: 'center'
+          // align: 'right',
+          // headerAlign: 'center'
         },
         columns: [
           {

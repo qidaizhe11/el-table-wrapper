@@ -29,24 +29,41 @@ Vue.use(ElTableWrapper)
   </el-table-wrapper>
 </template>
 
-
 <script>
   export default {
-
     data() {
       const data = [
-        { name: 'Jack', age: 28, address: 'some where', key: '1' },
-        { name: 'Rose', age: 36, address: 'some where', key: '2' },
+        {
+          date: '2016-05-03',
+          name: 'Tom',
+          age: 19,
+          address: 'No. 189, Grove St, Los Angeles'
+        }, {
+          date: '2016-05-02',
+          name: 'Tom',
+          age: 27,
+          address: 'No. 189, Grove St, Los Angeles'
+        }, {
+          date: '2016-05-04',
+          name: 'Tom',
+          age: 65,
+          address: 'No. 189, Grove St, Los Angeles'
+        }, {
+          date: '2016-05-01',
+          name: 'Tom',
+          age: 12,
+          address: 'No. 189, Grove St, Los Angeles'
+        }
       ]
 
       const columns = [{
-        prop: 'name', label: 'Name', width: 100
+        prop: 'name', label: 'Name', width: 160
       }, {
-        prop: 'age', label: 'Age', width: 100
+        prop: 'age', label: 'Age', width: 120
       }, {
-        prop: 'address', label: 'Address', width: 200
+        prop: 'address', label: 'Address'
       }, {
-        label: 'Operate'
+        prop: 'date', label: 'Date', width: 180
       }]
 
       return {
