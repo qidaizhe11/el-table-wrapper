@@ -936,14 +936,20 @@ var orderBy = function orderBy(array, sortKey, reverse, sortMethod) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "install", function() { return install; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ElTableWrapper__ = __webpack_require__(40);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "ElTableWrapper", function() { return __WEBPACK_IMPORTED_MODULE_0__components_ElTableWrapper__["a"]; });
 
 
-__WEBPACK_IMPORTED_MODULE_0__components_ElTableWrapper__["a" /* default */].install = function (Vue) {
+var install = function install(Vue) {
   Vue.component(__WEBPACK_IMPORTED_MODULE_0__components_ElTableWrapper__["a" /* default */].name, __WEBPACK_IMPORTED_MODULE_0__components_ElTableWrapper__["a" /* default */]);
 };
 
+__WEBPACK_IMPORTED_MODULE_0__components_ElTableWrapper__["a" /* default */].install = install;
+
 /* harmony default export */ __webpack_exports__["default"] = (__WEBPACK_IMPORTED_MODULE_0__components_ElTableWrapper__["a" /* default */]);
+
+
 
 /***/ }),
 /* 44 */
