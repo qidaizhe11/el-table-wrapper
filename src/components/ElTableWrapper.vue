@@ -458,7 +458,7 @@
         return function(h, { column, $index }) {
           return (
             <div class="table-header">
-              <div class={{'table-header-title': true, headerAlign: true}}>
+              <div class={['table-header-title', headerAlign]}>
                 <span>{columnAttr.label}</span>
                 {
                   columnAttr.sortable &&
@@ -631,12 +631,19 @@
       box-sizing: border-box;
       padding-left: 18px;
       padding-right: 18px;
-      height: 40px;
+      height: 36px;
       border-bottom: 1px solid $bordor-bottom-line-color;
 
       display: flex;
       justify-content: center;
       align-items: center;
+
+      &.left {
+        justify-content: flex-start;
+      }
+      &.right {
+        justify-content: flex-end;
+      }
 
       .sort-caret-wrapper {
         cursor: pointer;
@@ -702,7 +709,7 @@
     .table-header-content {
       box-sizing: border-box;
       padding: 0 18px;
-      height: 36px;
+      height: 40px;
       cursor: default;
 
       display: flex;
@@ -710,14 +717,37 @@
       align-items: center;
 
       .el-input {
+        width: 100%;
         font-size: 12px;
       }
       .el-select {
+        width: 100%;
         font-size: 12px;
+
+        .el-input {
+          input {
+            height: 26px;
+            max-height: 26px;
+            overflow: hidden;
+          }
+        }
+
+        .el-select__tags {
+          background-color: transparent;
+          height: 20px;
+          max-height: 20px;
+          overflow: hidden;
+        }
+
+        .el-tag {
+          height: 20px;
+          line-height: 20px;
+          margin: 0 0 0 6px;
+        }
       }
 
       .el-input__inner {
-        height: 24px;
+        height: 26px;
       }
     }
   }
