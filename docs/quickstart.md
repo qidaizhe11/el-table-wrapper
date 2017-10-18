@@ -25,8 +25,8 @@ Vue.use(ElTableWrapper)
 <desc>
 </desc>
 <template>
-  <el-taber-wrapper data="data" columns="columns">
-  </el-taber-wrapper>
+  <el-table-wrapper :data="data" :columns="columns">
+  </el-table-wrapper>
 </template>
 
 

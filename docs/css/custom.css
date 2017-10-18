@@ -1,0 +1,7 @@
+.el-table table {
+  margin-bottom: 0;
+}
+
+.pagination-wrap .el-pagination .el-pager{
+  padding-left: 0;
+}
