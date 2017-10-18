@@ -48,6 +48,10 @@
             width: 60
           },
           {
+            type: 'index',
+            width: 80
+          },
+          {
             prop: 'ip',
             label: 'IP',
             width: 200,

@@ -513,6 +513,10 @@
         if (columnProps.sortable) {
           propsNoCustom.sortable = 'custom'
         }
+        if (columnProps.type && columnProps.type === 'index') {
+          propsNoCustom.className = propsNoCustom.className || ''
+          propsNoCustom.className += ' ll-index'
+        }
 
         return (
           <el-table-column {...{
@@ -626,6 +630,14 @@
     th>.cell {
       padding-left: 0;
       padding-right: 0;
+    }
+    .el-table-column--selection .cell {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+    .ll-index .cell {
+      padding-left: 18px;
+      padding-right: 18px;
     }
     .table-header-title {
       box-sizing: border-box;
