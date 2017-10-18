@@ -26,7 +26,8 @@
 [https://qidaizhe11.github.io/element-table-wrapper](https://qidaizhe11.github.io/element-table-wrapper)
 
 ## Usage
-```vue
+
+```html
 <template>
   <el-table-wrapper :data="data" :columns="columns">
   </el-table-wrapper>
@@ -50,9 +51,9 @@
           age: 19,
           address: 'No. 189, Grove St, Los Angeles'
         }, {
-          date: '2016-05-02',
+          date: '2016-05-04',
           name: 'Tom',
-          age: 27,
+          age: 65,
           address: 'No. 189, Grove St, Los Angeles'
         }, {
           date: '2016-05-01',

@@ -22,10 +22,65 @@
 
 [![element-table-wrapper](https://nodei.co/npm/element-table-wrapper.png)](https://npmjs.org/package/element-table-wrapper)
 
-## Example
+## Documentation
+[https://qidaizhe11.github.io/element-table-wrapper](https://qidaizhe11.github.io/element-table-wrapper)
 
 ## Usage
-```
+
+```html
+<template>
+  <el-table-wrapper :data="data" :columns="columns">
+  </el-table-wrapper>
+</template>
+
+<script>
+  import Vue from 'vue'
+  import ElementUI from 'element-ui'
+  import 'element-ui/lib/theme-default/index.css'
+  import ElTableWrapper from 'element-table-wrapper'
+
+  Vue.use(ElementUI)
+  Vue.use(ElTableWrapper)
+
+  export default {
+    data() {
+      const data = [
+        {
+          date: '2016-05-03',
+          name: 'Tom',
+          age: 19,
+          address: 'No. 189, Grove St, Los Angeles'
+        }, {
+          date: '2016-05-04',
+          name: 'Tom',
+          age: 65,
+          address: 'No. 189, Grove St, Los Angeles'
+        }, {
+          date: '2016-05-01',
+          name: 'Tom',
+          age: 12,
+          address: 'No. 189, Grove St, Los Angeles'
+        }
+      ]
+
+      const columns = [{
+        prop: 'name', label: 'Name', width: 160
+      }, {
+        prop: 'age', label: 'Age', width: 120
+      }, {
+        prop: 'address', label: 'Address'
+      }, {
+        prop: 'date', label: 'Date', width: 180
+      }]
+
+      return {
+        data,
+        columns
+      }
+
+    }
+  }
+</script>
 ```
 
 ## API
