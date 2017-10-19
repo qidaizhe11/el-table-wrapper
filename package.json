@@ -1,6 +1,6 @@
 {
   "name": "element-table-wrapper",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "A Vue2 table component based on el-table of Element UI with pagination support and column filtering, sorting, searching features",
   "author": "Panfeng <qidaizhe11@gmail.com>",
   "main": "dist/el-table-wrapper.min.js",
