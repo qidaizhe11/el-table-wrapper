@@ -18,3 +18,7 @@
 .markdown-section .demo-block p.tip, .markdown-section .demo-block tr:nth-child(2n) {
   background-color: white;
 }
+
+.markdown-section {
+  max-width: 1024px;
+}

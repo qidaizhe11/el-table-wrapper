@@ -181,7 +181,7 @@
       onSearchInput(columnAttr, value) {
         const key = this.getColumnKey(columnAttr)
         this.states.searches[key] = value
-        if ('searchOnInput' in columnAttr && columnAttr.searchOnInput !== false) {
+        if (columnAttr.searchOnInput) {
           this.onSearchChange(columnAttr, value)
         }
       },
