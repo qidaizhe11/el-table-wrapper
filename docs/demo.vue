@@ -1,5 +1,11 @@
 <template>
-  <el-table-wrapper :data="data" :columns="columns">
+  <el-table-wrapper border
+    :data="tableData" :columns="tableColumns">
+    <template scope="scope">
+      <el-tag
+        :type="scope.row.tag === '家' ? 'primary' : 'success'"
+        close-transition>{{scope.row.tag}}</el-tag>
+    </template>
   </el-table-wrapper>
 </template>
 
