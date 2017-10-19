@@ -159,7 +159,8 @@
         column.order = sortOrder
 
         this.$emit('sort-change', {
-          column: sortColumn,
+          column: column,
+          columnAttr: sortColumn,
           prop: sortColumn ? sortColumn.prop : null,
           order: sortOrder
         })
@@ -200,7 +201,7 @@
         }
 
         this.$emit('search-change', {
-          column: columnAttr,
+          columnAttr: columnAttr,
           prop: columnAttr.prop,
           value: value
         })
@@ -221,7 +222,8 @@
         this.states.sortColumn = columnAttr
         this.states.sortOrder = order
         this.$emit('sort-change', {
-          column: columnAttr,
+          column: column,
+          columnAttr: columnAttr,
           prop,
           order
         })
