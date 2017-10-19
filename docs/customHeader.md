@@ -9,7 +9,8 @@ Table属性 `show-custom-header` 控制表格头搜索/筛选行的显示与否
 <desc>
 </desc>
 <template>
-  <el-table-wrapper :data="data" :columns="columns" :show-custom-header="true">
+  <el-table-wrapper border stripe
+   :data="data" :columns="columns" :show-custom-header="true">
   </el-table-wrapper>
 </template>
 
