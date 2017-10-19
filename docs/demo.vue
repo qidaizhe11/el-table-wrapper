@@ -1,54 +1,39 @@
 <template>
   <el-table-wrapper border
-    :data="tableData" :columns="tableColumns">
-    <template scope="scope">
-      <el-tag
-        :type="scope.row.tag === '家' ? 'primary' : 'success'"
-        close-transition>{{scope.row.tag}}</el-tag>
-    </template>
+    :data="data" :columns="columns">
   </el-table-wrapper>
 </template>
 
-
 <script>
   export default {
-
     data() {
-      const data = [
-        {
-          date: '2016-05-03',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles'
-        }, {
-          date: '2016-05-02',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles'
-        }, {
-          date: '2016-05-04',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles'
-        }, {
-          date: '2016-05-01',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles'
-        }
-      ]
-
       const columns = [{
-        prop: 'name', label: 'Name', width: 160
+        label: "Name",
+        prop: "name",
+        width: 150
       }, {
-        prop: 'age', label: 'Age', width: 120
+        label: "Age",
+        prop: "age",
+        width: 150
       }, {
-        prop: 'address', label: 'Address'
-      }, {
-        prop: 'date', label: 'Date', width: 180
-      }]
+        label: "Address",
+        prop: "address"
+      }];
+
+      const data = [];
+      for (let i = 0; i < 100; i++) {
+        data.push({
+          key: i,
+          name: `Edward King ${i}`,
+          age: 32,
+          address: `London, Park Lane no. ${i}`
+        });
+      }
 
       return {
         data,
         columns
-      }
-
+      };
     }
-  }
+  };
 </script>
