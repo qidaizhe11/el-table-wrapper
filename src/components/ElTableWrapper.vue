@@ -515,6 +515,9 @@
         if (columnProps.sortable) {
           propsNoCustom.sortable = 'custom'
         }
+        if (columnProps.scopedSlot) {
+          delete propsNoCustom.scopedSlot
+        }
         if (columnProps.type && columnProps.type === 'index') {
           propsNoCustom.className = propsNoCustom.className || ''
           propsNoCustom.className += ' ll-index'
@@ -525,8 +528,8 @@
             props: propsNoCustom
           }}>
             {
-              columnProps.custom && columnProps.custom.scopedSlot
-                ? this.$scopedSlots[columnProps.custom.scopedSlot] : ''
+              columnProps && columnProps.scopedSlot
+                ? this.$scopedSlots[columnProps.scopedSlot] : ''
             }
           </el-table-column>
         )

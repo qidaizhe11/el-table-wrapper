@@ -72,9 +72,9 @@
             filterPlaceholder: '位置',
             filterMultiple: false,
             // filteredValue: ['河南'],
+            scopedSlot: 'location-slot',
             custom: {
-              // renderHeaderContent: this.renderLocationHeaderContent,
-              scopedSlot: 'location-slot'
+              // renderHeaderContent: this.renderLocationHeaderContent
             }
           },
           {
