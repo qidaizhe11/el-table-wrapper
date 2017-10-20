@@ -6,6 +6,10 @@
   padding-left: 0;
 }
 
+.markdown-section .demo-block .el-table table {
+  display: table;
+}
+
 .markdown-section .demo-block td, .markdown-section .demo-block th {
   border: 0;
   padding: 0;

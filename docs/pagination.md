@@ -1,7 +1,7 @@
 # Pagination
-> pagination component work well with filter/search/sort based on el-pagination
+> pagination component dealed with filter/search/sort based on el-pagination
 
-`pagination`属性默认`true`，即默认显示分页组件，设为`false`时不展示和进行分页。
+分页功能默认启用，`pagination`属性设为`false`时不展示和进行分页。
 
 ```html
 /*vue*/
@@ -45,7 +45,7 @@
         data,
         columns,
         pagination: {
-          pageSize: 20,
+          pageSize: 10,
           layout: 'total, sizes, prev, pager, next',
           pageSizes: [10, 20, 50, 100],
           onSizeChange: this.onPageSizeChange,
