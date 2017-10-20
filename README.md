@@ -25,6 +25,8 @@
 ## Documentation
 [https://qidaizhe11.github.io/element-table-wrapper](https://qidaizhe11.github.io/element-table-wrapper)
 
+![image](https://github.com/qidaizhe11/element-table-wrapper/blob/master/docs/img/show.gif)
+
 ## Usage
 
 ```html
