@@ -63,18 +63,18 @@ Table属性 `show-custom-header` 控制表格头搜索/筛选行的显示与否
 
 ## sort
 
-custom header下`sort`用法跟`el-table`基本一致
+custom header下`sort`用法跟[el-table](http://element.eleme.io/1.4/#/zh-CN/component/table)基本一致
 
 ## filter
 
-custom header下`filter`用法跟`el-table`基本一致
+custom header下`filter`用法跟[el-table](http://element.eleme.io/1.4/#/zh-CN/component/table)基本一致
 
 ```html
 /*vue*/
 <desc>
 * 若未指定`columnKey`，将使用`prop`作为核心key，请勿使用`property`属性！
 * 注意：custom header下若列过窄，`filter multiple`多选显示效果可能欠佳
-</desc
+</desc>
 <template>
   <el-table-wrapper border
     :data="tableData" :columns="tableColumns" :show-custom-header="true">

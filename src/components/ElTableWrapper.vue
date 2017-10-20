@@ -613,17 +613,6 @@
 
   $bordor-bottom-line-color: #dfe6ec;
 
-  .ll-table.custom-header {
-    th>.cell {
-      .caret-wrapper {
-        display: none;
-      }
-      .el-table__column-filter-trigger {
-        display: none;
-      }
-    }
-  }
-
   .ll-table-pagination {
     margin: 16px 0;
     padding: 0;
@@ -631,10 +620,16 @@
     justify-content: flex-end;
   }
 
-  .ll-table {
+  .ll-table.custom-header {
     th>.cell {
       padding-left: 0;
       padding-right: 0;
+      .caret-wrapper {
+        display: none;
+      }
+      .el-table__column-filter-trigger {
+        display: none;
+      }
     }
     .el-table-column--selection .cell {
       padding-left: 14px;
