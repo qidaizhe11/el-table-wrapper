@@ -435,9 +435,9 @@
       renderHeaderContentFilterAndSearch() {
 
       },
-      renderHeaderContent(h, columnAttr, column) {
+      renderHeaderContent(h, columnAttr, column, $index) {
         if (columnAttr.custom && columnAttr.custom.renderHeaderContent) {
-          return columnAttr.custom.renderHeaderContent(h)
+          return columnAttr.custom.renderHeaderContent(h, { column, $index })
         }
 
         if (columnAttr.searchable) {
@@ -488,7 +488,7 @@
               </div>
               <div class="table-header-content"
                 on-click={e => that.onHeaderContentClick(e)}>
-                {that.renderHeaderContent(h, columnAttr, column)}
+                {that.renderHeaderContent(h, columnAttr, column, $index)}
               </div>
             </div>
           )
