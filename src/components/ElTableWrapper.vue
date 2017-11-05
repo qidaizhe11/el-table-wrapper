@@ -609,8 +609,6 @@
 </script>
 
 <style lang="scss">
-  // @import './assets/iconfont.css';
-
   $bordor-bottom-line-color: #e6ebf5;
 
   .ll-table-pagination {
