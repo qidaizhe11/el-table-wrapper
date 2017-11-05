@@ -27,18 +27,31 @@
 
 ![image](https://github.com/qidaizhe11/element-table-wrapper/blob/master/docs/img/show.gif)
 
+## Dependence
+
+- [Vue](https://github.com/vuejs/vue) 2.5+
+- [Element UI](https://github.com/ElemeFE/element) 2.0+
+
+1.x version:
+- Vue 2.4+
+- Element UI 1.4+
+
+## Browser Support
+
+Modern browsers and Internet Explorer 10+.
+
 ## Usage
 
 ```html
 <template>
-  <el-table-wrapper :data="data" :columns="columns">
+  <el-table-wrapper border :data="data" :columns="columns">
   </el-table-wrapper>
 </template>
 
 <script>
   import Vue from 'vue'
   import ElementUI from 'element-ui'
-  import 'element-ui/lib/theme-default/index.css'
+  import 'element-ui/lib/theme-chalk/index.css'
   import ElTableWrapper from 'element-table-wrapper'
 
   Vue.use(ElementUI)
@@ -119,6 +132,8 @@
 | scopedSlot | 自定义列模板的slot名称（不支持匿名slot） | String | - | - |
 | custom.renderHeaderContent | show-custom-header下列标题搜索栏区域渲染使用的Function | Function(h, { column, $index }) | - | - |
 
+## element-ui 1.x version
+见 [1.x](https://github.com/qidaizhe11/element-table-wrapper/tree/1.x) 分支
 
 ## Development
 
@@ -129,4 +144,4 @@ npm run play
 
 ## License
 
-element-table-wrapper is released under the MIT license.
+MIT license.

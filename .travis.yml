@@ -4,6 +4,5 @@ node_js: stable
 # script: npm run test
 script:
   - npm run build
-  - npm run lint
 after_success:
   - cat ./test/unit/coverage/lcov.info | ./node_modules/.bin/coveralls
