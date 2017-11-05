@@ -466,7 +466,7 @@
                   columnAttr.sortable &&
                   <div class="sort-caret-wrapper">
                     <div class="sort-icon-wrapper">
-                      <i class="sort-icon ll-table-iconfont icon-sort-up"
+                      <i class="sort-icon el-icon-sort-up"
                         on-click={$event => that.onSortClick($event, {
                           column: column,
                           columnAttr: columnAttr,
@@ -475,7 +475,7 @@
                       </i>
                     </div>
                     <div class="sort-icon-wrapper">
-                      <i class="sort-icon ll-table-iconfont icon-sort-down"
+                      <i class="sort-icon el-icon-sort-down"
                         on-click={$event => that.onSortClick($event, {
                           column: column,
                           columnAttr: columnAttr,
@@ -609,9 +609,9 @@
 </script>
 
 <style lang="scss">
-  @import './assets/iconfont.css';
+  // @import './assets/iconfont.css';
 
-  $bordor-bottom-line-color: #dfe6ec;
+  $bordor-bottom-line-color: #e6ebf5;
 
   .ll-table-pagination {
     margin: 16px 0;
@@ -621,9 +621,16 @@
   }
 
   .ll-table.custom-header {
-    th>.cell {
-      padding-left: 0;
-      padding-right: 0;
+    th {
+      padding: 0 0;
+      vertical-align: top;
+      div {
+        padding: 0 0;
+      }
+    }
+    th .cell {
+      vertical-align: top;
+      line-height: 14px;
       .caret-wrapper {
         display: none;
       }
@@ -631,19 +638,23 @@
         display: none;
       }
     }
-    .el-table-column--selection .cell {
-      padding-left: 14px;
-      padding-right: 14px;
+    th.el-table-column--selection .cell {
+      padding: 12px 10px;
+      line-height: 23px;
+      border-bottom: 1px solid $bordor-bottom-line-color;
     }
-    .ll-index .cell {
-      padding-left: 18px;
-      padding-right: 18px;
+    th.ll-index .cell {
+      padding: 12px 10px;
+      line-height: 23px;
+      border-bottom: 1px solid $bordor-bottom-line-color;
+    }
+    .table-header {
+      width: 100%;
     }
     .table-header-title {
       box-sizing: border-box;
-      padding-left: 18px;
-      padding-right: 18px;
-      height: 36px;
+      padding: 12px 10px;
+      line-height: 23px;
       border-bottom: 1px solid $bordor-bottom-line-color;
 
       display: flex;
@@ -662,69 +673,35 @@
 
       .sort-caret-wrapper {
         cursor: pointer;
-        margin-left: 5px;
-        display: inline-block;
-        vertical-align: middle;
+        display: inline-flex;
+        align-items: center;
+        width: 24px;
+        height: 13px;
+        line-height: 23px;
+        overflow: initial;
 
         .sort-icon-wrapper {
-          display: inline-block;
-          width: 10px;
-          height: 30px;
-          text-align: center;
+          color: #878d99;
+          width: 14px;
           overflow: hidden;
-          vertical-align: middle;
-
-          .sort-icon {
-            font-size: 14px;
-            color: #97a8be;
-            transition: font-size 0.25s ease-out 0s;
-            transition: margin 0.1s ease-in 0s;
-
-            &:before {
-              box-sizing: border-box;
-            }
-            &:hover {
-              color: lighten(#48576a, 10);
-            }
-          }
-
-          .icon-sort-up {
-            margin-right: -5px;
-          }
-          .icon-sort-down {
-            margin-left: -5px;
-            &:hover {
-              margin-left: -8px;
-            }
-          }
+          font-size: 13px;
+          line-height: 23px;
         }
       }
-
-      &.ascending .sort-caret-wrapper .sort-icon-wrapper .icon-sort-up {
-        font-size: 20px;
-        color: #48576a;
-      }
-      &.descending .sort-caret-wrapper .sort-icon-wrapper .icon-sort-down {
-        font-size: 20px;
-        color: #48576a;
-        margin-left: -8px;
-      }
     }
 
-    .ascending .sort-caret-wrapper .sort-icon-wrapper .icon-sort-up {
-      font-size: 20px;
-      color: #48576a;
+    .ascending .sort-icon-wrapper .el-icon-sort-up {
+      color: #409eff;
     }
-    .descending .sort-caret-wrapper .sort-icon-wrapper .icon-sort-down {
-      font-size: 20px;
-      color: #48576a;
-      margin-left: -8px;
+    .descending .sort-icon-wrapper .el-icon-sort-down {
+      color: #409eff;
     }
 
     .table-header-content {
       box-sizing: border-box;
-      padding: 0 18px;
-      height: 40px;
+      padding: 6px 10px;
+      // height: 40px;
+      line-height: 23px;
       cursor: default;
 
       display: flex;
@@ -750,6 +727,7 @@
         .el-select__tags {
           background-color: transparent;
           height: 20px;
+          line-height: 20px;
           max-height: 20px;
           overflow: hidden;
         }
