@@ -479,8 +479,8 @@
                 <span>{columnAttr.label}</span>
                 {
                   columnAttr.sortable &&
-                  <div class="sort-caret-wrapper">
-                    <div class="sort-icon-wrapper">
+                  <span class="sort-caret-wrapper">
+                    <span class="sort-icon-wrapper">
                       <i class="sort-icon el-icon-sort-up"
                         on-click={$event => that.onSortClick($event, {
                           column: column,
@@ -488,8 +488,8 @@
                           order: 'ascending'
                         })}>
                       </i>
-                    </div>
-                    <div class="sort-icon-wrapper">
+                    </span>
+                    <span class="sort-icon-wrapper">
                       <i class="sort-icon el-icon-sort-down"
                         on-click={$event => that.onSortClick($event, {
                           column: column,
@@ -497,8 +497,8 @@
                           order: 'descending'
                         })}>
                       </i>
-                    </div>
-                  </div>
+                    </span>
+                  </span>
                 }
               </div>
               <div class="table-header-content"
@@ -687,6 +687,7 @@
 
       .sort-caret-wrapper {
         cursor: pointer;
+        position: relative;
         display: inline-flex;
         align-items: center;
         width: 24px;
