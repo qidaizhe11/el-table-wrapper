@@ -154,7 +154,6 @@ custom header下`filter`用法跟[el-table](http://element.eleme.io/1.4/#/zh-CN/
 ```html
 /*vue*/
 <desc>
-custom header下若列过窄，`filter multiple`多选显示效果欠佳
 </desc>
 <template>
   <el-table-wrapper border

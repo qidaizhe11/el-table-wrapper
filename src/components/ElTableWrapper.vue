@@ -726,6 +726,7 @@
 
       .icon-search-delete {
         cursor: pointer;
+        line-height: 23px;
       }
 
       .el-input {
