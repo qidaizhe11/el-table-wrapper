@@ -12,11 +12,12 @@
         <el-button type="text">详情</el-button>
       </template>
       <template slot-scope="scope" slot="location-slot">
-        <el-tag>{{scope.row.location.name}}</el-tag>
+        <!-- <el-tag>{{scope.row.location.name}}</el-tag> -->
+        {{scope.row.location.name}}
       </template>
-      <div slot="append">
+      <!-- <div slot="append">
         <span>别扯了，到底了</span>
-      </div>
+      </div> -->
     </el-table-wrapper>
   </div>
 </template>

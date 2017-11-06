@@ -624,6 +624,7 @@
       vertical-align: top;
       div {
         padding: 0 0;
+        line-height: 23px;
       }
     }
     th .cell {
@@ -697,14 +698,15 @@
 
     .table-header-content {
       box-sizing: border-box;
-      padding: 6px 10px;
-      // height: 40px;
+      padding: 10px 10px;
       line-height: 23px;
       cursor: default;
 
       display: flex;
       justify-content: center;
       align-items: center;
+
+      $height: 22px;
 
       .el-input {
         width: 100%;
@@ -724,15 +726,15 @@
 
         .el-select__tags {
           background-color: transparent;
-          height: 20px;
-          line-height: 20px;
-          max-height: 20px;
+          height: $height;
+          line-height: $height;
+          max-height: $height;
           overflow: hidden;
         }
 
         .el-tag {
-          height: 20px;
-          line-height: 20px;
+          height: $height;
+          line-height: $height;
           margin: 0 0 0 6px;
         }
       }
