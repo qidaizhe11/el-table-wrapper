@@ -1,10 +1,5 @@
 <template>
   <div class="table-container">
-    <!-- <el-table-wrapper :data="data" :configs="configs">
-                        <template scope="scope" slot="operate-slot">
-                          <el-button type="text">详情</el-button>
-                        </template>
-                      </el-table-wrapper> -->
     <el-table-wrapper stripe border :data="data" :columns="columns" :column-default="columnDefault"
       :pagination="pagination" :show-custom-header="true" :default-sort="defaultSort"
       @sort-change="onTableSortChange" @search-change="onTableSearchChange" @filter-change="onTableFilterChange">

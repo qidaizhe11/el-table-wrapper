@@ -275,6 +275,12 @@
         this.states.pagination = nextPagination
         this.$emit('pagination-change', nextPagination)
       },
+      onHeaderTitleClick(e, { columnAttr }) {
+        const filterable = columnAttr.filters
+        if (filterable && this.showCustomHeader) {
+          e.stopPropagation()
+        }
+      },
       onHeaderContentClick(e) {
         e.stopPropagation()
       },
@@ -460,7 +466,10 @@
         return function(h, { column, $index }) {
           return (
             <div class="table-header">
-              <div class={['table-header-title', headerAlign]}>
+              <div class={['table-header-title', headerAlign]}
+                on-click={e => that.onHeaderTitleClick(e, {
+                  columnAttr: columnAttr
+                })}>
                 <span>{columnAttr.label}</span>
                 {
                   columnAttr.sortable &&
