@@ -6,18 +6,22 @@
   padding-left: 0;
 }
 
-.markdown-section .demo-block .el-table table {
-  display: table;
+.markdown-section .el-table tr {
+  border-top: 0;
 }
 
-.markdown-section .demo-block td, .markdown-section .demo-block th {
+/* .markdown-section .demo-block .el-table table {
+  display: table;
+} */
+
+/* .markdown-section .demo-block td, .markdown-section .demo-block th {
   border: 0;
   padding: 0;
-}
+} */
 
-.demo-block .el-table--border td, .demo-block .el-table--border th {
+/* .demo-block .el-table--border td, .demo-block .el-table--border th {
   border-right: 1px solid #dfe6ec;
-}
+} */
 
 .markdown-section .demo-block p.tip, .markdown-section .demo-block tr:nth-child(2n) {
   background-color: white;
