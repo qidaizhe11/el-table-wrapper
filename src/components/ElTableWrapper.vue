@@ -364,14 +364,11 @@
           Vue.set(this.states.searches, key, '')
         }
         const value = this.states.searches[key] || ''
-        const props = value ? {
-          icon: 'close',
-          onIconClick: e => that.onSearchClearClick(e, columnAttr)
-        } : {}
-        props.value = value
         return (
           <el-input class="header-content-search" {...{
-            props: props,
+            props: {
+              value: value
+            },
             on: {
               input: debounce(value => {
                 that.onSearchInput(columnAttr, value)
@@ -388,6 +385,15 @@
               }
             }
           }}>
+          {
+            value &&
+            <i class="el-input__icon el-icon-close icon-search-delete" {...{
+              slot: 'suffix',
+              on: {
+                click: e => that.onSearchClearClick(e, columnAttr)
+              }
+            }}></i>
+          }
           </el-input>
         )
       },
@@ -716,6 +722,10 @@
       align-items: center;
 
       $height: 22px;
+
+      .icon-search-delete {
+        cursor: pointer;
+      }
 
       .el-input {
         width: 100%;
