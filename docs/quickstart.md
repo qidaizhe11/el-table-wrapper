@@ -1,24 +1,24 @@
-# Qucik start
+# Getting Started
 
-# Install
+## Install
 
 ```
 npm install element-table-wrapper
 ```
 
-# Import in your project
+## Import in your project
 
 ```js
 import Vue from 'vue'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
+import 'element-ui/lib/theme-chalk/index.css'
 import ElTableWrapper from 'element-table-wrapper'
 
 Vue.use(ElementUI)
 Vue.use(ElTableWrapper)
 ```
 
-# Basic Usage
+## Basic Usage
 
 ```html
 /*vue*/

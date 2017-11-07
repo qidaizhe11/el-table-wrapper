@@ -1,6 +1,6 @@
-- Getting Start
-  - [Quick Start](quickstart)
+- Getting Started
+  - [Getting Started](quickstart)
 - Guide
+  - [Filter](filter)
   - [Pagination](pagination)
   - [Render Custom Header](customHeader)
-  
