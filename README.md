@@ -118,7 +118,7 @@ Modern browsers and Internet Explorer 10+.
 | Event Name | Description | Parameters |
 | --- | --- | --- |
 | sort-change | 当表格的排序条件发生变化的时候会触发该事件 | { column, columnAttr, prop, order } |
-| search-change | 当表格的搜索条件发生变化时会触发该事件 | { columnAttr, prop, order } |
+| search-change | 当表格的搜索条件发生变化时会触发该事件 | { columnAttr, prop, value } |
 | pagination-change | 当分页发生变化时触发 | pagination |
 
 ### Table-column Attributes
@@ -126,7 +126,7 @@ Modern browsers and Internet Explorer 10+.
 在 [el-table](http://element.eleme.io/1.4/#/zh-CN/component/table) Table-column Attributes 基础上，扩展如下参数：
 
 | Property   | Desc    | Type | Accepted Values | Default value |
-| ------------- | ------------- | --- | --- | --- 
+| ------------- | ------------- | --- | --- | ---
 | searchable | 对应列是否可以搜索（只在show-custom-header下有效），如果设置为 'custom'，则代表用户希望远程排序，需要监听 Table 的 search-change事件 | boolean, string | true, false, 'custom' | false |
 | searchMethod | 对数据进行搜索时使用的方法，仅当searchable设置为true时有效，用法同filter-method，需返回一个布尔值 | Function(value, row) | - | - |
 | scopedSlot | 自定义列模板的slot名称（不支持匿名slot） | String | - | - |
