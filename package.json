@@ -29,9 +29,11 @@
   },
   "license": "MIT",
   "dependencies": {
+    "lodash.debounce": "^4.0.8"
+  },
+  "peerDependencies": {
     "element-ui": "^2.0.3",
-    "lodash.debounce": "^4.0.8",
-    "vue": "^2.5.3"
+    "vue": "2.5.3"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
