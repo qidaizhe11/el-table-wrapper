@@ -66,4 +66,14 @@ if (config.build.bundleAnalyzerReport) {
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
 
-module.exports = webpackConfig
+var webpackServerConfig = merge(webpackConfig, {
+  target: 'node',
+  output: {
+    path: config.build.assetsRoot,
+    filename: 'el-table-wrapper.ssr.js',
+    library: 'ElTableWrapper',
+    libraryTarget: 'umd'
+  }
+})
+
+module.exports = [ webpackConfig, webpackServerConfig ]
