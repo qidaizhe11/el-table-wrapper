@@ -19,7 +19,7 @@
 
 <script>
   import Vue from 'vue'
-  import { Table, TableColumn, Button, Input, Select, Option, Tag } from 'element-ui'
+  import { Table, TableColumn, Button, Input, Select, Option, Tag, Pagination } from 'element-ui'
   import ElTableWrapper from '@/index'
 
   Vue.use(Table)
@@ -29,6 +29,7 @@
   Vue.use(Select)
   Vue.use(Option)
   Vue.use(Tag)
+  Vue.use(Pagination)
   Vue.use(ElTableWrapper)
 
   export default {
