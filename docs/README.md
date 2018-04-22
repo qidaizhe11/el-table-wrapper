@@ -98,6 +98,9 @@ Modern browsers and Internet Explorer 10+.
 </script>
 ```
 
+## SSR Usage
+`import ElTableWrapper from 'el-table-wrapper/dist/el-table-wrapper.ssr.js'`
+
 ## API
 
 ### Table Attributes
