@@ -373,7 +373,9 @@ var defaultFilterMultiple = true;
         nextPagination.currentPage = pagination.currentPage;
       }
       this.states.pagination = nextPagination;
-      this.$emit('pagination-change', nextPagination);
+      this.$emit('pagination-change', _extends({}, nextPagination, {
+        currentPage: currentPage || pagination.currentPage || 1
+      }));
     },
     onHeaderTitleClick: function onHeaderTitleClick(e, _ref3) {
       var columnAttr = _ref3.columnAttr;
@@ -807,7 +809,7 @@ var __vue_styles__ = injectStyle
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
-var __vue_module_identifier__ = "17eda7aa"
+var __vue_module_identifier__ = "33f4ea55"
 var Component = normalizeComponent(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ElTableWrapper_vue__["a" /* default */],
   __vue_template__,
@@ -833,7 +835,7 @@ if(content.locals) module.exports = content.locals;
 // add CSS to SSR context
 var add = __webpack_require__(6)
 module.exports.__inject__ = function (context) {
-  add("5c2a54a4", content, true, context)
+  add("30c54703", content, true, context)
 };
 
 /***/ }),

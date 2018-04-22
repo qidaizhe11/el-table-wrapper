@@ -373,7 +373,9 @@ var defaultFilterMultiple = true;
         nextPagination.currentPage = pagination.currentPage;
       }
       this.states.pagination = nextPagination;
-      this.$emit('pagination-change', nextPagination);
+      this.$emit('pagination-change', _extends({}, nextPagination, {
+        currentPage: currentPage || pagination.currentPage || 1
+      }));
     },
     onHeaderTitleClick: function onHeaderTitleClick(e, _ref3) {
       var columnAttr = _ref3.columnAttr;
@@ -830,7 +832,7 @@ var content = __webpack_require__(4);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(6)("5c2a54a4", content, true);
+var update = __webpack_require__(6)("30c54703", content, true);
 
 /***/ }),
 /* 4 */
