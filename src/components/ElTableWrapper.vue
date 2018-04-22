@@ -273,7 +273,10 @@
           nextPagination.currentPage = pagination.currentPage
         }
         this.states.pagination = nextPagination
-        this.$emit('pagination-change', nextPagination)
+        this.$emit('pagination-change', {
+          ...nextPagination,
+          currentPage: currentPage || pagination.currentPage || 1
+        })
       },
       onHeaderTitleClick(e, { columnAttr }) {
         const filterable = columnAttr.filters
