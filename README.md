@@ -16,7 +16,9 @@
 [badgesize-image]: http://img.badgesize.io/https://unpkg.com/el-table-wrapper?compression=gzip
 [badgesize-url]: https://github.com/qidaizhe11/el-table-wrapper
 
-> A Vue2 table component based on el-table of Element UI with pagination support.
+[DEPRECATED] Please use other implementations instead.
+
+Since I no longer traced element-ui any more, hard to maintain.
 
 ## Install
 
